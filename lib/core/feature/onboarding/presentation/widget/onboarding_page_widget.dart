@@ -1,0 +1,143 @@
+import 'package:flutter/material.dart';
+import 'package:my_secure_note_app/core/common/widgets/custom_icon_widget.dart';
+import 'package:my_secure_note_app/core/theme/app_theme.dart';
+import 'package:sizer/sizer.dart';
+
+class OnboardingPageWidget extends StatelessWidget {
+  final String title;
+  final String description;
+  final String iconName;
+  final VoidCallback? onNext;
+  final VoidCallback? onSkip;
+  final bool isLastPage;
+  final int currentPage;
+  final int totalPages;
+
+  const OnboardingPageWidget({
+    super.key,
+    required this.title,
+    required this.description,
+    required this.iconName,
+    this.onNext,
+    this.onSkip,
+    this.isLastPage = false,
+    required this.currentPage,
+    required this.totalPages,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+        child: Column(
+          children: [
+            if (!isLastPage)
+              Align(
+                alignment: Alignment.topRight,
+                child: TextButton(
+                  onPressed: onSkip,
+                  child: Text(
+                    'Skip',
+                    style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
+                      color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ),
+
+            SizedBox(height: 4.h),
+            Container(
+              width: 60.w,
+              height: 30.h,
+              decoration: BoxDecoration(
+                color: AppTheme.lightTheme.colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Center(
+                child: CustomIconWidget(
+                  iconName: iconName,
+                  size: 80,
+                  color: AppTheme.lightTheme.colorScheme.primary,
+                ),
+              ),
+            ),
+
+            SizedBox(height: 6.h),
+
+            Text(
+              title,
+              style: AppTheme.lightTheme.textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: AppTheme.lightTheme.colorScheme.onSurface,
+              ),
+              textAlign: TextAlign.center,
+            ),
+
+            SizedBox(height: 3.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 4.w),
+              child: Text(
+                description,
+                style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
+                  color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                  height: 1.5,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+
+            const Spacer(),
+
+            _buildPageIndicator(),
+
+            SizedBox(height: 4.h),
+            SizedBox(
+              width: double.infinity,
+              height: 6.h,
+              child: ElevatedButton(
+                onPressed: onNext,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.lightTheme.colorScheme.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: Text(
+                  isLastPage ? 'Get Started' : 'Next',
+                  style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+
+            SizedBox(height: 2.h),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPageIndicator() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        totalPages,
+        (index) => Container(
+          margin: EdgeInsets.symmetric(horizontal: 1.w),
+          width: currentPage == index ? 8.w : 2.w,
+          height: 1.h,
+          decoration: BoxDecoration(
+            color: currentPage == index
+                ? AppTheme.lightTheme.colorScheme.primary
+                : AppTheme.lightTheme.colorScheme.outline,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+      ),
+    );
+  }
+}
