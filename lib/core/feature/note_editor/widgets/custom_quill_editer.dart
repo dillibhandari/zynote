@@ -88,7 +88,7 @@ class _CustomQuillEditorState extends State<CustomQuillEditor> {
               decoration: _editorDecoration(),
               child: Stack(
                 children: [
-                   if (_showHint && widget.hintText != null)
+                  if (_showHint && widget.hintText != null)
                     Positioned.fill(
                       child: Padding(
                         padding: const EdgeInsets.all(16),
@@ -109,7 +109,6 @@ class _CustomQuillEditorState extends State<CustomQuillEditor> {
                         ),
                       ),
                     ),
- 
                   CupertinoScrollbar(
                     controller: widget.scrollController,
                     child: QuillEditor(

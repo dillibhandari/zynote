@@ -1,13 +1,20 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:my_secure_note_app/core/feature/note_editor/model/note_model.dart';
 import 'package:my_secure_note_app/core/feature/notes_dashboard/provider/dashboard_provider.dart';
 import 'package:my_secure_note_app/core/feature/notes_dashboard/widgets/category_list_widget.dart';
-import 'package:my_secure_note_app/core/helper/rsa_services.dart';
+import 'package:my_secure_note_app/core/feature/notes_dashboard/widgets/note_grid_loading.dart';
 import 'package:sizer/sizer.dart';
 import 'package:my_secure_note_app/core/theme/app_theme.dart';
+import '../../helper/rsa_services.dart';
+import '../../preferances/shared_preferences.dart';
+
 class NotesDashboard extends ConsumerStatefulWidget {
   const NotesDashboard({super.key});
 
@@ -22,16 +29,18 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
   late AnimationController _fabAnimationController;
   late Animation<double> _fabAnimation;
   late RSAService rsaService;
+  late FocusNode _searchFocusNode;
+  late final StreamSubscription<bool> _keyboardSubscription;
 
   @override
   void initState() {
     super.initState();
     rsaService = RSAService();
     _initializeControllers();
-
-    // Initialize notes data
+    initialKeyBoard();
+    // Load notes dynamically
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(notesProvider.notifier).initialize();
+      ref.read(notesListProvider.notifier).loadNotes();
     });
   }
 
@@ -40,10 +49,13 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
     _tabController.dispose();
     _searchController.dispose();
     _fabAnimationController.dispose();
+    _searchFocusNode.dispose();
+    _keyboardSubscription.cancel();
     super.dispose();
   }
 
   void _initializeControllers() {
+    _searchFocusNode = FocusNode();
     _tabController = TabController(length: 3, vsync: this)
       ..addListener(_onTabChanged);
 
@@ -68,18 +80,30 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
     }
   }
 
+  void initialKeyBoard() {
+    _keyboardSubscription = KeyboardVisibilityController().onChange.listen((
+      visible,
+    ) {
+      if (!visible && _searchFocusNode.hasFocus) {
+        _searchFocusNode.unfocus();
+      }
+    });
+  }
+
   void _onSearchChanged() {
-    ref.read(notesProvider.notifier).updateSearchQuery(_searchController.text);
+    ref
+        .read(notesListProvider.notifier)
+        .updateSearchQuery(_searchController.text);
   }
 
   void _toggleView() {
-    ref.read(notesProvider.notifier).toggleView();
+    ref.read(notesListProvider.notifier).toggleView();
     HapticFeedback.lightImpact();
   }
 
   Future<void> _onRefresh() async {
     HapticFeedback.lightImpact();
-    await ref.read(notesProvider.notifier).refresh();
+    await ref.read(notesListProvider.notifier).loadNotes();
     Fluttertoast.showToast(
       msg: "Notes refreshed",
       toastLength: Toast.LENGTH_SHORT,
@@ -89,21 +113,19 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
 
   void _onCreateNote() {
     HapticFeedback.mediumImpact();
-     ref.read(notesProvider.notifier).updateCategory("All Notes");
-    context.pushNamed('note-editor');
-  }
-
-  void _onNoteTap(Map<String, dynamic> note) {
-    HapticFeedback.selectionClick();
+    AppSettings().recentlyAddedNoteId = '';
+    ref.read(notesListProvider.notifier).updateCategory("All Notes");
     context.pushNamed(
       'note-editor',
-      extra: {'noteId': note['id'], 'mode': 'view'},
+      extra: {'note_title': '', 'note_description': ''},
     );
   }
 
-  void _togglePin(Map<String, dynamic> note) {
-    ref.read(notesProvider.notifier).togglePin(note['id'].toString());
-    HapticFeedback.lightImpact();
+  void _onNoteTap(NoteModel note) {
+    AppSettings().recentlyAddedNoteId = note.noteId;
+    ref.read(notesListProvider.notifier).updateCategory(note.noteCategory);
+    HapticFeedback.selectionClick();
+    context.pushNamed('note-editor', extra: note.toMap());
   }
 
   void _showFilterOptions() {
@@ -113,7 +135,7 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
       isScrollControlled: true,
       builder: (context) => FilterBottomSheet(
         onSortChanged: (value) {
-          ref.read(notesProvider.notifier).updateSortBy(value);
+          ref.read(notesListProvider.notifier).updateSortBy(value);
           context.pop();
           HapticFeedback.selectionClick();
         },
@@ -169,7 +191,7 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
         ),
         _buildAppBarAction(
           icon: Icons.settings_rounded,
-          onPressed: () => context.pushNamed('settings'),
+          onPressed: () => context.pushNamed('note-settings'),
           tooltip: 'Settings',
         ),
         SizedBox(width: 2.w),
@@ -199,7 +221,7 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
           SizedBox(height: 1.h),
           CategoryFilterSection(
             onCategoryChanged: (category) {
-              ref.read(notesProvider.notifier).updateCategory(category);
+              ref.read(notesListProvider.notifier).updateCategory(category);
             },
           ),
           SizedBox(height: 2.h),
@@ -213,6 +235,7 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
       child: TextField(
+        focusNode: _searchFocusNode,
         controller: _searchController,
         decoration: InputDecoration(
           hintText: 'Search notes...',
@@ -240,43 +263,43 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
     final isSearching = ref.watch(isSearchingProvider);
 
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return Center(
+        child: NotesShimmerLoader(
+          viewType: selectedView == 'grid'
+              ? NotesViewType.grid
+              : NotesViewType.list,
+        ),
+      );
     }
 
-    if (!hasNotes) {
-      return EmptyState(isSearching: isSearching);
-    }
+    if (!hasNotes) return EmptyState(isSearching: isSearching);
 
     return selectedView == 'grid'
         ? _buildGridView(filteredNotes)
         : _buildListView(filteredNotes);
   }
 
-  Widget _buildGridView(List<Map<String, dynamic>> notes) {
+  Widget _buildGridView(List<NoteModel> notes) {
     return RefreshIndicator(
       onRefresh: _onRefresh,
       child: GridView.builder(
         padding: EdgeInsets.symmetric(horizontal: 4.w),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          crossAxisSpacing: 3.w,
+          crossAxisSpacing: 4.w,
           mainAxisSpacing: 2.h,
-          childAspectRatio: 0.75,
+          childAspectRatio: 0.8,
         ),
         itemCount: notes.length,
         itemBuilder: (context, index) {
           final note = notes[index];
-          return NoteCard(
-            note: note,
-            onTap: () => _onNoteTap(note),
-            onLongPress: () => _togglePin(note),
-          );
+          return NoteCard(note: note, onTap: () => _onNoteTap(note));
         },
       ),
     );
   }
 
-  Widget _buildListView(List<Map<String, dynamic>> notes) {
+  Widget _buildListView(List<NoteModel> notes) {
     return RefreshIndicator(
       onRefresh: _onRefresh,
       child: ListView.builder(
@@ -287,7 +310,7 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
           return NoteListItem(
             note: note,
             onTap: () => _onNoteTap(note),
-            onLongPress: () => _togglePin(note),
+            onLongPress: () {},
           );
         },
       ),
@@ -295,18 +318,38 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
   }
 
   Widget _buildFloatingActionButton() {
-    return FloatingActionButton.extended(
-      onPressed: _onCreateNote,
-      backgroundColor: AppTheme.lightTheme.colorScheme.primary,
-      icon: const Icon(Icons.add_rounded, color: Colors.white),
-      label: const Text(
-        'New Note',
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+    return GestureDetector(
+      onTap: _onCreateNote,
+      child: Container(
+        width: 140,
+        height: 50,
+        decoration: BoxDecoration(
+          color: AppTheme.lightTheme.colorScheme.primary,
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.add_rounded, color: Colors.white),
+              SizedBox(width: 1.h),
+              Text(
+                "New Note ",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
+/// AppBar title
 class _AppBarTitle extends StatelessWidget {
   const _AppBarTitle();
 
@@ -322,27 +365,21 @@ class _AppBarTitle extends StatelessWidget {
   }
 }
 
-class NoteCard extends StatelessWidget {
-  final Map<String, dynamic> note;
+class NoteCard extends ConsumerWidget {
+  final NoteModel note;
   final VoidCallback onTap;
-  final VoidCallback onLongPress;
 
-  const NoteCard({
-    super.key,
-    required this.note,
-    required this.onTap,
-    required this.onLongPress,
-  });
+  const NoteCard({super.key, required this.note, required this.onTap});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final categoryColor =
-        Constants.categoryColors[note['category']] ?? Colors.grey;
-    final isPinned = note['isPinned'] ?? false;
+        Constants.categoryColors[note.noteCategory] ?? Colors.grey;
+    final isPinned = note.pinned;
 
     return GestureDetector(
       onTap: onTap,
-      onLongPress: onLongPress,
+
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -362,16 +399,25 @@ class NoteCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _NoteHeader(
-                title: note['title'],
+                title: note.noteTitle,
                 isPinned: isPinned,
                 pinColor: categoryColor,
+                onDelete: () {
+                  ref.read(notesListProvider.notifier).deleteNote(note.noteId);
+                  HapticFeedback.mediumImpact();
+                },
+                onPinToggle: () {
+                  ref.read(notesListProvider.notifier).togglePin(note.noteId);
+                  HapticFeedback.lightImpact();
+                },
               ),
               SizedBox(height: 1.h),
-              _NotePreview(preview: note['preview']),
+              _NotePreview(preview: note.preview),
               SizedBox(height: 1.h),
               _NoteFooter(
-                category: note['category'],
-                isEncrypted: note['isEncrypted'],
+                isPinned: isPinned,
+                category: note.noteCategory,
+                isEncrypted: true,
                 categoryColor: categoryColor,
               ),
             ],
@@ -382,110 +428,9 @@ class NoteCard extends StatelessWidget {
   }
 }
 
-class _NoteHeader extends StatelessWidget {
-  final String title;
-  final bool isPinned;
-  final Color pinColor;
-
-  const _NoteHeader({
-    required this.title,
-    required this.isPinned,
-    required this.pinColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Text(
-            title,
-            style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-        if (isPinned) Icon(Icons.push_pin, size: 16, color: pinColor),
-      ],
-    );
-  }
-}
-
-class _NotePreview extends StatelessWidget {
-  final String preview;
-
-  const _NotePreview({required this.preview});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Text(
-        preview,
-        style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-          color: Colors.grey.shade600,
-        ),
-        maxLines: 4,
-        overflow: TextOverflow.ellipsis,
-      ),
-    );
-  }
-}
-
-class _NoteFooter extends StatelessWidget {
-  final String category;
-  final bool isEncrypted;
-  final Color categoryColor;
-
-  const _NoteFooter({
-    required this.category,
-    required this.isEncrypted,
-    required this.categoryColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _CategoryBadge(category: category, color: categoryColor),
-        if (isEncrypted)
-          const Icon(Icons.lock_rounded, size: 14, color: Colors.grey),
-      ],
-    );
-  }
-}
-
-class _CategoryBadge extends StatelessWidget {
-  final String category;
-  final Color color;
-
-  const _CategoryBadge({required this.category, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.4.h),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Text(
-        category,
-        style: TextStyle(
-          fontSize: 10.sp,
-          color: color,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-}
-
+/// List note item
 class NoteListItem extends StatelessWidget {
-  final Map<String, dynamic> note;
+  final NoteModel note;
   final VoidCallback onTap;
   final VoidCallback onLongPress;
 
@@ -499,8 +444,8 @@ class NoteListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categoryColor =
-        Constants.categoryColors[note['category']] ?? Colors.grey;
-    final isPinned = note['isPinned'] ?? false;
+        Constants.categoryColors[note.noteCategory] ?? Colors.grey;
+    final isPinned = note.pinned;
 
     return Container(
       margin: EdgeInsets.only(bottom: 2.h),
@@ -533,8 +478,8 @@ class NoteListItem extends StatelessWidget {
   }
 }
 
-class _NoteListItemContent extends StatelessWidget {
-  final Map<String, dynamic> note;
+class _NoteListItemContent extends ConsumerWidget {
+  final NoteModel note;
   final Color categoryColor;
   final bool isPinned;
 
@@ -545,7 +490,17 @@ class _NoteListItemContent extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    void onPinToggle() {
+      ref.read(notesListProvider.notifier).togglePin(note.noteId);
+      HapticFeedback.lightImpact();
+    }
+
+    void onDelete() {
+      ref.read(notesListProvider.notifier).deleteNote(note.noteId);
+      HapticFeedback.mediumImpact();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -553,7 +508,7 @@ class _NoteListItemContent extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                note['title'],
+                note.noteTitle,
                 style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -561,15 +516,53 @@ class _NoteListItemContent extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            if (isPinned) Icon(Icons.push_pin, size: 16, color: categoryColor),
-            SizedBox(width: 3.w),
-            if (note['isEncrypted'])
-              const Icon(Icons.lock_rounded, size: 16, color: Colors.grey),
+            SizedBox(width: 8.w),
+            Builder(
+              builder: (context) {
+                return InkWell(
+                  onTap: () async {
+                    final RenderBox button =
+                        context.findRenderObject() as RenderBox;
+                    final Offset offset = button.localToGlobal(Offset.zero);
+                    final Size size = button.size;
+
+                    final selected = await showMenu<String>(
+                      context: context,
+                      position: RelativeRect.fromLTRB(
+                        offset.dx,
+                        offset.dy + size.height,
+                        offset.dx + size.width,
+                        offset.dy,
+                      ),
+                      items: [
+                        PopupMenuItem(
+                          value: 'pin',
+                          child: Text(isPinned ? 'Unpin' : 'Pin'),
+                        ),
+                        PopupMenuItem(value: 'delete', child: Text('Delete')),
+                      ],
+                    );
+
+                    if (selected == null) return;
+
+                    switch (selected) {
+                      case 'pin':
+                        onPinToggle();
+                        break;
+                      case 'delete':
+                        onDelete();
+                        break;
+                    }
+                  },
+                  child: Icon(Icons.more_vert, size: 18.sp),
+                );
+              },
+            ),
           ],
         ),
         SizedBox(height: 0.5.h),
         Text(
-          note['preview'],
+          note.preview,
           style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
             color: Colors.grey.shade600,
           ),
@@ -579,12 +572,16 @@ class _NoteListItemContent extends StatelessWidget {
         SizedBox(height: 1.h),
         Row(
           children: [
-            _CategoryBadge(category: note['category'], color: categoryColor),
+            _CategoryBadge(category: note.noteCategory, color: categoryColor),
             SizedBox(width: 2.w),
             Text(
-              _formatDate(note['createdAt']),
-              style: TextStyle(fontSize: 10.sp, color: Colors.grey.shade500),
+              _formatDate(DateTime.parse(note.createdAt)),
+              style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade500),
             ),
+            Spacer(),
+            if (isPinned) Icon(Icons.push_pin, size: 16, color: categoryColor),
+            SizedBox(width: 3.w),
+            const Icon(Icons.lock_rounded, size: 16, color: Colors.grey),
           ],
         ),
       ],
@@ -600,6 +597,168 @@ class _NoteListItemContent extends StatelessWidget {
     if (diff.inDays < 7) return '${diff.inDays} days ago';
 
     return '${date.day}/${date.month}/${date.year}';
+  }
+}
+
+class _NoteHeader extends StatelessWidget {
+  final String title;
+  final bool isPinned;
+  final Color pinColor;
+  final void Function()? onPinToggle;
+  final void Function()? onDelete;
+
+  const _NoteHeader({
+    required this.title,
+    required this.isPinned,
+    required this.pinColor,
+    this.onPinToggle,
+    this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                child: Text(
+                  title,
+                  style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Builder(
+                builder: (context) {
+                  return InkWell(
+                    onTap: () async {
+                      final RenderBox button =
+                          context.findRenderObject() as RenderBox;
+                      final Offset offset = button.localToGlobal(Offset.zero);
+                      final Size size = button.size;
+
+                      final selected = await showMenu<String>(
+                        context: context,
+                        position: RelativeRect.fromLTRB(
+                          offset.dx,
+                          offset.dy + size.height,
+                          offset.dx + size.width,
+                          offset.dy,
+                        ),
+                        items: [
+                          PopupMenuItem(
+                            value: 'pin',
+                            child: Text(isPinned ? 'Unpin' : 'Pin'),
+                          ),
+                          PopupMenuItem(value: 'delete', child: Text('Delete')),
+                        ],
+                      );
+
+                      if (selected == null) return;
+
+                      switch (selected) {
+                        case 'pin':
+                          if (onPinToggle != null) onPinToggle!();
+                          break;
+                        case 'delete':
+                          if (onDelete != null) onDelete!();
+                          break;
+                      }
+                    },
+                    child: Icon(Icons.more_vert, size: 18.sp),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _NotePreview extends StatelessWidget {
+  final String preview;
+
+  const _NotePreview({required this.preview});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Text(
+        softWrap: true,
+        preview,
+        style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
+          color: Colors.grey.shade600,
+        ),
+        maxLines: 7,
+         textScaler: TextScaler.linear(1.05),
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+}
+
+class _NoteFooter extends StatelessWidget {
+  final String category;
+  final bool isEncrypted;
+  final bool isPinned;
+  final Color categoryColor;
+
+  const _NoteFooter({
+    required this.category,
+    required this.isEncrypted,
+    required this.isPinned,
+    required this.categoryColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _CategoryBadge(category: category, color: categoryColor),
+        Spacer(),
+        if (isPinned) Icon(Icons.push_pin, size: 16.sp, color: categoryColor),
+        SizedBox(width: 4.w),
+        if (isEncrypted)
+          Icon(Icons.lock_rounded, size: 16.sp, color: Colors.grey),
+      ],
+    );
+  }
+}
+
+class _CategoryBadge extends StatelessWidget {
+  final String category;
+  final Color color;
+
+  const _CategoryBadge({required this.category, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.4.h),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(50),
+      ),
+      child: Text(
+        category,
+        style: TextStyle(
+          fontSize: 12.sp,
+          color: color,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
   }
 }
 
@@ -692,7 +851,7 @@ class FilterBottomSheet extends ConsumerWidget {
     return Text(
       'Sort By',
       style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w600,
       ),
     );
   }
@@ -763,7 +922,7 @@ class FilterBottomSheet extends ConsumerWidget {
         title: Text(
           title,
           style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
             color: isSelected ? AppTheme.lightTheme.colorScheme.primary : null,
           ),
         ),

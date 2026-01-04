@@ -17,7 +17,7 @@ class PinInputDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+      padding: EdgeInsets.only(left: 8.w, right: 8.w, bottom: 2.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: List.generate(pinLength, (index) {

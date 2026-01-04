@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_secure_note_app/core/common/widgets/custom_icon_widget.dart';
 import 'package:my_secure_note_app/core/theme/app_theme.dart';
 import 'package:sizer/sizer.dart';
 
@@ -22,31 +21,34 @@ class SecurityHeader extends StatelessWidget {
       child: Column(
         children: [
           if (showLogo) ...[
-            Container(
-              width: 26.w,
-              height: 26.w,
-              decoration: BoxDecoration(
-                color: AppTheme.lightTheme.primaryColor,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.lightTheme.primaryColor.withValues(
-                      alpha: 0.3,
-                    ),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
+            Hero(
+              tag: 'logo-image',
+              child: Container(
+                width: 30.w,
+                height: 30.w,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF5A7BBE), Color(0xFF8CA4E0)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                ],
-              ),
-              child: Center(
-                child: CustomIconWidget(
-                  iconName: 'security',
-                  color: Colors.white,
-                  size: 14.w,
+                  color: AppTheme.lightTheme.primaryColor,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.lightTheme.primaryColor.withValues(
+                        alpha: 0.3,
+                      ),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
+                child: Center(child: Image.asset('assets/images/3.png')),
               ),
             ),
-            SizedBox(height: 3.h),
+
+            SizedBox(height: 2.h),
           ],
           Text(
             title,

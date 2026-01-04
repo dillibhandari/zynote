@@ -1,6 +1,11 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_secure_note_app/core/database/note_db.dart';
 
 import '../model/note_model.dart';
+
+final notesRepositoryProvider = Provider<NotesRepository>((ref) {
+  return NotesRepositoryImpl();
+});
 
 abstract class NotesRepository {
   Future<void> createNote(NoteModel note);

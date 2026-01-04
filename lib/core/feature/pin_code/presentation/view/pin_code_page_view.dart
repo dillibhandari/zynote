@@ -1,4 +1,3 @@
-// lib/core/feature/pin_code/presentation/screens/pin_authentication.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,6 +58,7 @@ class _PinAuthenticationState extends ConsumerState<PinAuthentication>
       pinCodeProvider(widget.isFromOnboarding).notifier,
     );
     final pinState = ref.watch(pinCodeProvider(widget.isFromOnboarding));
+
     ref.listen<PinAuthState>(pinCodeProvider(widget.isFromOnboarding), (
       previous,
       current,
@@ -66,12 +66,7 @@ class _PinAuthenticationState extends ConsumerState<PinAuthentication>
       if (current.currentPinState == PinState.authSuccess &&
           previous?.currentPinState != PinState.authSuccess) {
         ref.read(appSettingsNotifierProvider.notifier).setAuthenticated(true);
-
-        Future.microtask(() {
-          if (mounted) {
-            context.pushReplacementNamed('notes-dashboard');
-          }
-        });
+        context.pushReplacementNamed('notes-dashboard');
       }
 
       if (pinNotifier.shouldRequireMasterPassword()) {
@@ -82,109 +77,117 @@ class _PinAuthenticationState extends ConsumerState<PinAuthentication>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SizedBox(
-              width: double.infinity,
-              height: constraints.maxHeight,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      AppTheme.lightTheme.scaffoldBackgroundColor,
-                      AppTheme.lightTheme.scaffoldBackgroundColor.withValues(
-                        alpha: 0.8,
-                      ),
-                    ],
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(height: 6.h),
-                    SecurityHeader(
-                      title: pinNotifier.getHeaderTitle(),
-                      subtitle: pinNotifier.getHeaderSubtitle(),
-                    ),
-
-                    SizedBox(height: 2.h),
-                    Expanded(
-                      child: pinState.isLocked
-                          ? LockoutTimer(
-                              lockoutDuration: pinState.lockoutDuration,
-                              onTimerComplete: pinNotifier.onLockoutComplete,
-                            )
-                          : PinInputDisplay(
-                              pinLength: PinCodeNotifier.PIN_LENGTH,
-                              currentLength: pinState.currentPin.length,
-                              isError: pinState.isError,
-                            ),
-                    ),
-
-                    pinState.isLocked
-                        ? Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w),
-                            child: ElevatedButton(
-                              onPressed: null,
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(double.infinity, 6.h),
-                                backgroundColor:
-                                    AppTheme.lightTheme.colorScheme.surface,
-                              ),
-                              child: const Text('Locked'),
-                            ),
-                          )
-                        : NumericKeypad(
-                            onNumberPressed: pinNotifier.onNumberPressed,
-                            onDeletePressed: pinNotifier.onDeletePressed,
-                            onDeleteLongPressed:
-                                pinNotifier.onDeleteLongPressed,
-                            isEnabled:
-                                !pinState.isProcessing &&
-                                pinState.currentPinState !=
-                                    PinState.authSuccess,
-                          ),
-
-                    SizedBox(height: 3.h),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w),
-                      child: Container(
-                        padding: EdgeInsets.all(4.w),
-                        decoration: BoxDecoration(
-                          color: AppTheme.lightTheme.colorScheme.surface,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: AppTheme.lightTheme.colorScheme.outline
-                                .withValues(alpha: 0.3),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            CustomIconWidget(
-                              iconName: 'shield',
-                              color: AppTheme.lightTheme.primaryColor,
-                              size: 5.w,
-                            ),
-                            SizedBox(width: 3.w),
-                            Expanded(
-                              child: Text(
-                                'Your notes are protected with military-grade encryption',
-                                style: AppTheme.lightTheme.textTheme.bodySmall,
-                              ),
-                            ),
+        child: pinState.currentPinState == PinState.authSuccess
+            ? Center(child: CircularProgressIndicator())
+            : LayoutBuilder(
+                builder: (context, constraints) {
+                  return SizedBox(
+                    width: double.infinity,
+                    height: constraints.maxHeight,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            AppTheme.lightTheme.scaffoldBackgroundColor,
+                            AppTheme.lightTheme.scaffoldBackgroundColor
+                                .withValues(alpha: 0.8),
                           ],
                         ),
                       ),
-                    ),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 2.h),
+                          SecurityHeader(
+                            title: pinNotifier.getHeaderTitle(),
+                            subtitle: pinNotifier.getHeaderSubtitle(),
+                          ),
 
-                    SizedBox(height: 2.h),
-                  ],
-                ),
+                          Expanded(
+                            child: pinState.isLocked
+                                ? LockoutTimer(
+                                    lockoutDuration: pinState.lockoutDuration,
+                                    onTimerComplete:
+                                        pinNotifier.onLockoutComplete,
+                                  )
+                                : PinInputDisplay(
+                                    pinLength: PinCodeNotifier.PIN_LENGTH,
+                                    currentLength: pinState.currentPin.length,
+                                    isError: pinState.isError,
+                                  ),
+                          ),
+
+                          pinState.isLocked
+                              ? Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.w,
+                                  ),
+                                  child: ElevatedButton(
+                                    onPressed: null,
+                                    style: ElevatedButton.styleFrom(
+                                      minimumSize: Size(double.infinity, 6.h),
+                                      backgroundColor: AppTheme
+                                          .lightTheme
+                                          .colorScheme
+                                          .surface,
+                                    ),
+                                    child: const Text('Locked'),
+                                  ),
+                                )
+                              : NumericKeypad(
+                                  onNumberPressed: pinNotifier.onNumberPressed,
+                                  onDeletePressed: pinNotifier.onDeletePressed,
+                                  onDeleteLongPressed:
+                                      pinNotifier.onDeleteLongPressed,
+                                  isEnabled:
+                                      !pinState.isProcessing &&
+                                      pinState.currentPinState !=
+                                          PinState.authSuccess,
+                                ),
+
+                          SizedBox(height: 3.h),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w),
+                            child: Container(
+                              padding: EdgeInsets.all(4.w),
+                              decoration: BoxDecoration(
+                                color: AppTheme.lightTheme.colorScheme.surface,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: AppTheme.lightTheme.colorScheme.outline
+                                      .withValues(alpha: 0.3),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  CustomIconWidget(
+                                    iconName: 'shield',
+                                    color: AppTheme.lightTheme.primaryColor,
+                                    size: 5.w,
+                                  ),
+                                  SizedBox(width: 3.w),
+                                  Expanded(
+                                    child: Text(
+                                      'Your notes are protected with military-grade encryption',
+                                      style: AppTheme
+                                          .lightTheme
+                                          .textTheme
+                                          .bodySmall,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 2.h),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
       ),
     );
   }

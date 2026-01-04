@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_secure_note_app/core/preferances/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-import 'package:go_router/go_router.dart';
 
 class SplashPageView extends StatefulWidget {
   const SplashPageView({super.key});
@@ -191,7 +191,6 @@ class _SplashPageViewState extends State<SplashPageView>
                           ),
                           SizedBox(height: 2.h),
 
-                          // ✅ Initialization text using ValueListenableBuilder
                           ValueListenableBuilder<String>(
                             valueListenable: _initializationTextNotifier,
                             builder: (context, text, _) {
@@ -201,7 +200,7 @@ class _SplashPageViewState extends State<SplashPageView>
                                   text,
                                   key: ValueKey(text),
                                   style: GoogleFonts.inter(
-                                    fontSize: 11.sp,
+                                    fontSize: 14.sp,
                                     fontWeight: FontWeight.w500,
                                     color: Colors.white.withOpacity(0.9),
                                   ),
@@ -226,7 +225,7 @@ class _SplashPageViewState extends State<SplashPageView>
                         Text(
                           'AES-256 Encryption • Zero-Knowledge Architecture',
                           style: GoogleFonts.inter(
-                            fontSize: 9.sp,
+                            fontSize: 12.sp,
                             fontWeight: FontWeight.w400,
                             color: Colors.white.withOpacity(0.7),
                           ),
@@ -258,7 +257,7 @@ class _SplashPageViewState extends State<SplashPageView>
                 Text(
                   'Secure Notes',
                   style: GoogleFonts.inter(
-                    fontSize: 26.sp,
+                    fontSize: 24.sp,
                     fontWeight: FontWeight.w700,
                     color: Colors.white,
                     letterSpacing: -0.5,
@@ -268,7 +267,7 @@ class _SplashPageViewState extends State<SplashPageView>
                 Text(
                   'Privacy by Design • Encrypted by Default',
                   style: GoogleFonts.inter(
-                    fontSize: 12.sp,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
                     color: Colors.white.withOpacity(0.8),
                   ),
@@ -291,10 +290,11 @@ class _SplashPageViewState extends State<SplashPageView>
           child: FadeTransition(
             opacity: _logoFadeAnimation,
             child: Container(
-              width: 24.w,
-              height: 24.w,
+              width: 50.w,
+              height: 50.w,
+
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withOpacity(0.4),
                 borderRadius: BorderRadius.circular(6.w),
                 border: Border.all(
                   color: Colors.white.withOpacity(0.3),
@@ -302,19 +302,11 @@ class _SplashPageViewState extends State<SplashPageView>
                 ),
               ),
               child: Center(
-                // child: SvgPicture.asset(
-                //   'assets/images/img_app_logo.png',
-                //   width: 12.w,
-                //   height: 12.w,
-                //   colorFilter: const ColorFilter.mode(
-                //     Colors.white,
-                //     BlendMode.srcIn,
-                //   ),
-                // ),
-                child: Image.asset(
-                  'assets/images/img_app_logo.png',
-                  width: 12.w,
-                  height: 12.w,
+                child: Hero(
+                  tag: 'logo-image',
+                  child: Image.asset(
+                     'assets/images/splash_logo.png',
+                  ),
                 ),
               ),
             ),
