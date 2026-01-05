@@ -1,4 +1,4 @@
-package com.example.my_secure_note_app
+package com.yakstack.zynote
 
 import io.flutter.embedding.android.FlutterActivity
 
