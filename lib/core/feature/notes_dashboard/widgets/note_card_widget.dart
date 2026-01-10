@@ -16,7 +16,7 @@ class NoteCardWidget extends StatelessWidget {
   final VoidCallback onExport;
 
   const NoteCardWidget({
-    Key? key,
+    super.key,
     required this.note,
     required this.onTap,
     required this.onEdit,
@@ -26,7 +26,7 @@ class NoteCardWidget extends StatelessWidget {
     required this.onDuplicate,
     required this.onMoveToCategory,
     required this.onExport,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

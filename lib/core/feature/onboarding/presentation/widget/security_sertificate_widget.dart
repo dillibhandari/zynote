@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:my_secure_note_app/core/common/widgets/custom_icon_widget.dart';
 import 'package:sizer/sizer.dart';

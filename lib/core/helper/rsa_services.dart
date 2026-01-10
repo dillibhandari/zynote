@@ -86,7 +86,7 @@ class RSAService {
       return privateKey;
     } else {
       final storedPrivateKey = AppSettings().privateKey;
-      this.privateKey = storedPrivateKey;
+      privateKey = storedPrivateKey;
       return storedPrivateKey;
     }
   }
@@ -96,7 +96,7 @@ class RSAService {
       return publicKey;
     } else {
       final storedPublicKey = AppSettings().publicKey;
-      this.publicKey = storedPublicKey;
+      publicKey = storedPublicKey;
       return storedPublicKey;
     }
   }

@@ -21,7 +21,7 @@ class NotesListWidget extends StatelessWidget {
   final Function(Map<String, dynamic>) onNoteExport;
 
   const NotesListWidget({
-    Key? key,
+    super.key,
     required this.notes,
     required this.isLoading,
     required this.isSearching,
@@ -36,7 +36,7 @@ class NotesListWidget extends StatelessWidget {
     required this.onNoteDuplicate,
     required this.onNoteMoveToCategory,
     required this.onNoteExport,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

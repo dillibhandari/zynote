@@ -9,12 +9,12 @@ class SearchBarWidget extends StatelessWidget {
   final bool isActive;
 
   const SearchBarWidget({
-    Key? key,
+    super.key,
     required this.controller,
     required this.onChanged,
     required this.onFilterTap,
     this.isActive = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

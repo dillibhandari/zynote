@@ -8,11 +8,11 @@ class CategoryFilterWidget extends StatelessWidget {
   final List<String> categories;
 
   const CategoryFilterWidget({
-    Key? key,
+    super.key,
     required this.selectedCategory,
     required this.onCategoryChanged,
     required this.categories,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

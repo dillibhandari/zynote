@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:my_secure_note_app/core/common/widgets/custom_app_bar.dart';
 import 'package:my_secure_note_app/core/preferances/shared_preferences.dart';

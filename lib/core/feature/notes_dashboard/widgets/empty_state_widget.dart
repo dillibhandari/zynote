@@ -9,11 +9,11 @@ class EmptyStateWidget extends StatelessWidget {
   final String searchQuery;
 
   const EmptyStateWidget({
-    Key? key,
+    super.key,
     required this.onCreateNote,
     this.isSearching = false,
     this.searchQuery = '',
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

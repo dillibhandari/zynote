@@ -85,8 +85,7 @@ class NotesNotifier extends StateNotifier<NotesState> {
       _applyFiltersAndSort();
     } catch (e) {
       state = state.copyWith(isLoading: false);
-      print('Error loading notes: $e');
-    }
+     }
   }
 
   /// Search
