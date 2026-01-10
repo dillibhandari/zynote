@@ -10,7 +10,6 @@ import './widgets/share_options_widget.dart';
 import './widgets/custom_quill_editer.dart';
 import './widgets/keyboard_attached_toolbar.dart';
 import '../notes_dashboard/widgets/category_list_widget.dart';
-import '../../theme/app_theme.dart';
 
 class NoteEditor extends ConsumerStatefulWidget {
   final Map<String, dynamic>? existingNote;
@@ -118,20 +117,22 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
             insetPadding: EdgeInsets.symmetric(horizontal: 20),
             title: Text(
               'Unsaved Changes',
-              style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
             ),
             content: Text(
               'You have unsaved changes. Do you want to save before leaving?',
-              style: AppTheme.lightTheme.textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
                 child: Text(
                   'Discard',
-                  style: const TextStyle(color: Colors.red),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
                 ),
               ),
               TextButton(
@@ -192,7 +193,7 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
 
     if (!_initialized || state.controller == null) {
       return Scaffold(
-        backgroundColor: AppTheme.lightTheme.colorScheme.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: const Center(child: CircularProgressIndicator()),
       );
     }
@@ -200,7 +201,7 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
     return PopScope(
       onPopInvokedWithResult: (didPop, result) => _onWillPop(),
       child: Scaffold(
-        backgroundColor: AppTheme.lightTheme.colorScheme.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: _buildAppBar(state),
         body: Stack(
           children: [
@@ -224,7 +225,7 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
                       ),
                       SizedBox(height: 2.h),
                       KeyboardAttachedToolbar(controller: state.controller!),
-                      SizedBox(height: 1.h),
+                      // SizedBox(height: 1.h),
                     ],
                   ),
                 ),
@@ -248,7 +249,9 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
                 child: GestureDetector(
                   onTap: () => setState(() => _showShareOptions = false),
                   child: Container(
-                    color: Colors.black.withOpacity(0.5),
+                    color: Theme.of(context).colorScheme.scrim.withValues(
+                      alpha: 0.5,
+                    ),
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: ShareOptionsWidget(
@@ -269,19 +272,24 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
   }
 
   Widget _buildTitleField() {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return TextField(
       controller: _titleController,
       focusNode: _titleFocusNode,
-      style: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
+      style: theme.textTheme.headlineSmall?.copyWith(
         fontWeight: FontWeight.w700,
         fontSize: 18.sp,
+        color: theme.colorScheme.onSurface,
       ),
       decoration: InputDecoration(
         hintText: 'Note title...',
-        hintStyle: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
-          color: AppTheme.lightTheme.colorScheme.onSurfaceVariant.withAlpha(
-            150,
-          ),
+        filled: isDark ? false : theme.inputDecorationTheme.filled,
+        fillColor:
+            isDark ? Colors.transparent : theme.inputDecorationTheme.fillColor,
+        hintStyle: theme.textTheme.headlineSmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant
+              .withValues(alpha: isDark ? 0.6 : 0.7),
           fontWeight: FontWeight.w400,
           fontSize: 18.sp,
         ),
@@ -296,8 +304,15 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
   }
 
   PreferredSizeWidget _buildAppBar(NoteEditorState state) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final actionBackground =
+        isDark ? theme.colorScheme.onSurface : theme.colorScheme.primary;
+    final actionForeground =
+        isDark ? theme.colorScheme.surface : theme.colorScheme.onSecondary;
     return AppBar(
-      backgroundColor: AppTheme.lightTheme.colorScheme.surface,
+      backgroundColor: theme.appBarTheme.backgroundColor ??
+          theme.colorScheme.surface,
       elevation: 0,
       leading: GestureDetector(
         onTap: () async {
@@ -307,15 +322,15 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
         },
         child: Container(
           margin: EdgeInsets.all(2.w),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 6, top: 4),
-            child: CustomIconWidget(
-              iconName: 'arrow_back_ios',
-              color: AppTheme.lightTheme.colorScheme.onSurface,
-              size: 22,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 6, top: 4),
+              child: CustomIconWidget(
+                iconName: 'arrow_back_ios',
+                color: theme.colorScheme.onSurface,
+                size: 22,
+              ),
             ),
           ),
-        ),
       ),
       titleSpacing: 6,
       title: Column(
@@ -323,15 +338,15 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
         children: [
           Text(
             'Secure Editor',
-            style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+            style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
           if (state.lastSaved != null)
             Text(
               'Last saved: ${_notifier.formatLastSaved()}',
-              style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-                color: Colors.grey.shade600,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
                 fontSize: 12.sp,
               ),
             ),
@@ -346,16 +361,16 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
                 Container(
                   width: 8,
                   height: 8,
-                  decoration: const BoxDecoration(
-                    color: Colors.orange,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.secondary,
                     shape: BoxShape.circle,
                   ),
                 ),
                 SizedBox(width: 1.w),
                 Text(
                   'Unsaved',
-                  style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                    color: Colors.orange,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.secondary,
                   ),
                 ),
               ],
@@ -367,7 +382,7 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
             margin: EdgeInsets.only(right: 4.w),
             padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.w),
             decoration: BoxDecoration(
-              color: AppTheme.lightTheme.colorScheme.primary,
+              color: actionBackground,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -379,8 +394,8 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
                     height: 4.w,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      valueColor: const AlwaysStoppedAnimation<Color>(
-                        Colors.white,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        actionForeground,
                       ),
                     ),
                   ),
@@ -388,15 +403,15 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
                 ] else ...[
                   CustomIconWidget(
                     iconName: 'save',
-                    color: Colors.white,
+                    color: actionForeground,
                     size: 16,
                   ),
                   SizedBox(width: 1.w),
                 ],
                 Text(
                   state.isSaving ? 'Saving...' : 'Save',
-                  style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                    color: Colors.white,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: actionForeground,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

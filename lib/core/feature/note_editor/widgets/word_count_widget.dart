@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_secure_note_app/core/common/widgets/custom_icon_widget.dart';
-import 'package:my_secure_note_app/core/theme/app_theme.dart';
 import 'package:sizer/sizer.dart';
 
 class WordCountWidget extends StatelessWidget {
@@ -23,10 +22,10 @@ class WordCountWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface,
+        color: Theme.of(context).colorScheme.surface,
         border: Border(
           top: BorderSide(
-            color: AppTheme.lightTheme.colorScheme.outline,
+            color: Theme.of(context).colorScheme.outline,
             width: 1,
           ),
         ),
@@ -36,8 +35,8 @@ class WordCountWidget extends StatelessWidget {
         children: [
           Text(
             '$wordCount words',
-            style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
           Row(
@@ -52,12 +51,12 @@ class WordCountWidget extends StatelessWidget {
               ],
               Text(
                 '$characterCount / $characterLimit',
-                style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: isOverLimit
                       ? Colors.red
                       : isNearLimit
                       ? Colors.orange
-                      : AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
                   fontWeight: isNearLimit ? FontWeight.w600 : FontWeight.w400,
                 ),
               ),

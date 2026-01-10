@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_secure_note_app/core/theme/app_theme.dart';
 import 'package:sizer/sizer.dart';
 
 class SecurityHeader extends StatelessWidget {
@@ -32,11 +31,11 @@ class SecurityHeader extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  color: AppTheme.lightTheme.primaryColor,
+                  color: Theme.of(context).primaryColor,
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                      color: AppTheme.lightTheme.primaryColor.withValues(
+                      color: Theme.of(context).primaryColor.withValues(
                         alpha: 0.3,
                       ),
                       blurRadius: 12,
@@ -52,8 +51,8 @@ class SecurityHeader extends StatelessWidget {
           ],
           Text(
             title,
-            style: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.onSurface,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
               fontWeight: FontWeight.w600,
             ),
             textAlign: TextAlign.center,
@@ -62,8 +61,8 @@ class SecurityHeader extends StatelessWidget {
             SizedBox(height: 1.h),
             Text(
               subtitle!,
-              style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-                color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
               textAlign: TextAlign.center,
             ),

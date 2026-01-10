@@ -8,6 +8,11 @@ class KeyboardAttachedToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final toolbarColor = isDark
+        ? theme.colorScheme.surfaceContainerHighest
+        : theme.colorScheme.surface;
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     return AnimatedPadding(
       duration: const Duration(milliseconds: 250),
@@ -15,7 +20,7 @@ class KeyboardAttachedToolbar extends StatelessWidget {
       padding: EdgeInsets.only(bottom: bottomInset),
       child: Material(
         elevation: 8,
-        color: Colors.white,
+        color: toolbarColor,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: Column(
@@ -84,6 +89,7 @@ class KeyboardAttachedToolbar extends StatelessWidget {
                     icon: Icons.link,
                     tooltip: 'Link',
                     onTap: () => _showLinkDialog(context),
+                    context: context,
                   ),
                 ],
               ),
@@ -126,16 +132,19 @@ class KeyboardAttachedToolbar extends StatelessWidget {
                     tooltip: 'Code',
                     onTap: () =>
                         controller.formatSelection(Attribute.codeBlock),
+                    context: context,
                   ),
                   _buildIconButton(
                     icon: Icons.format_color_text,
                     tooltip: 'Text Color',
                     onTap: () => _showColorPicker(context, false),
+                    context: context,
                   ),
                   _buildIconButton(
                     icon: Icons.format_color_fill,
                     tooltip: 'Background Color',
                     onTap: () => _showColorPicker(context, true),
+                    context: context,
                   ),
                   _buildQuillButton(
                     child: QuillToolbarClearFormatButton(
@@ -172,7 +181,10 @@ class KeyboardAttachedToolbar extends StatelessWidget {
     required IconData icon,
     required String tooltip,
     required VoidCallback onTap,
+    required BuildContext context,
   }) {
+    final theme = Theme.of(context);
+    final iconColor = theme.colorScheme.onSurface;
     return Tooltip(
       message: tooltip,
       child: Material(
@@ -185,7 +197,11 @@ class KeyboardAttachedToolbar extends StatelessWidget {
             width: 40,
             height: 40,
             alignment: Alignment.center,
-            child: Icon(icon, size: 20, color: Colors.grey.shade800),
+            child: Icon(
+              icon,
+              size: 20,
+              color: iconColor,
+            ),
           ),
         ),
       ),
@@ -260,6 +276,9 @@ class KeyboardAttachedToolbar extends StatelessWidget {
 
     showModalBottomSheet(
       context: context,
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? Theme.of(context).colorScheme.surfaceContainerHighest
+          : Theme.of(context).colorScheme.surface,
       builder: (context) => Container(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -299,7 +318,9 @@ class KeyboardAttachedToolbar extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: colorData['color'] as Color,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey.shade300),
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
                     ),
                   ),
                 );

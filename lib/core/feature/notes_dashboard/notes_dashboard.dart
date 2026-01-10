@@ -10,8 +10,8 @@ import 'package:my_secure_note_app/core/feature/note_editor/model/note_model.dar
 import 'package:my_secure_note_app/core/feature/notes_dashboard/provider/dashboard_provider.dart';
 import 'package:my_secure_note_app/core/feature/notes_dashboard/widgets/category_list_widget.dart';
 import 'package:my_secure_note_app/core/feature/notes_dashboard/widgets/note_grid_loading.dart';
-import 'package:sizer/sizer.dart';
 import 'package:my_secure_note_app/core/theme/app_theme.dart';
+import 'package:sizer/sizer.dart';
 import '../../helper/rsa_services.dart';
 import '../../preferances/shared_preferences.dart';
 
@@ -151,7 +151,7 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
 
     return Scaffold(
       extendBodyBehindAppBar: false,
-      backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [_buildAppBar()],
         body: _buildBody(),
@@ -171,7 +171,7 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
       floating: false,
       pinned: true,
       elevation: 0,
-      backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       flexibleSpace: const FlexibleSpaceBar(
         title: _AppBarTitle(),
         titlePadding: EdgeInsets.only(left: 20, bottom: 16),
@@ -206,7 +206,7 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
   }) {
     return IconButton(
       onPressed: onPressed,
-      icon: Icon(icon, color: AppTheme.lightTheme.colorScheme.onSurface),
+      icon: Icon(icon, color: Theme.of(context).colorScheme.onSurface),
       tooltip: tooltip,
     );
   }
@@ -232,6 +232,7 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
   }
 
   Widget _buildSearchBar() {
+    final theme = Theme.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
       child: TextField(
@@ -241,7 +242,7 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
           hintText: 'Search notes...',
           prefixIcon: const Icon(Icons.search_rounded),
           filled: true,
-          fillColor: Colors.grey.shade100,
+          fillColor: theme.colorScheme.surfaceContainerHighest,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
             borderSide: BorderSide.none,
@@ -318,13 +319,21 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
   }
 
   Widget _buildFloatingActionButton() {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final backgroundColor = isDark
+        ? theme.colorScheme.onSurface
+        : AppTheme.primaryLight;
+    final foregroundColor = isDark
+        ? theme.colorScheme.surface
+        : theme.colorScheme.onSecondary;
     return GestureDetector(
       onTap: _onCreateNote,
       child: Container(
         width: 140,
         height: 50,
         decoration: BoxDecoration(
-          color: AppTheme.lightTheme.colorScheme.primary,
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(50),
         ),
         child: Padding(
@@ -332,12 +341,12 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.add_rounded, color: Colors.white),
+              Icon(Icons.add_rounded, color: foregroundColor),
               SizedBox(width: 1.h),
               Text(
                 "New Note ",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: foregroundColor,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -357,9 +366,9 @@ class _AppBarTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       'Zynote',
-      style: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
+      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
         fontWeight: FontWeight.bold,
-        color: AppTheme.lightTheme.colorScheme.onSurface,
+        color: Theme.of(context).colorScheme.onSurface,
       ),
     );
   }
@@ -373,6 +382,7 @@ class NoteCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final categoryColor =
         Constants.categoryColors[note.noteCategory] ?? Colors.grey;
     final isPinned = note.pinned;
@@ -382,12 +392,12 @@ class NoteCard extends ConsumerWidget {
 
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.grey.shade200),
-          boxShadow: const [
+          border: Border.all(color: theme.colorScheme.outline),
+          boxShadow: [
             BoxShadow(
-              color: Color.fromRGBO(0, 0, 0, 0.05),
+              color: theme.colorScheme.shadow.withValues(alpha: 0.08),
               blurRadius: 10,
               offset: Offset(0, 4),
             ),
@@ -443,6 +453,7 @@ class NoteListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final categoryColor =
         Constants.categoryColors[note.noteCategory] ?? Colors.grey;
     final isPinned = note.pinned;
@@ -450,12 +461,12 @@ class NoteListItem extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: 2.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey.shade200),
-        boxShadow: const [
+        border: Border.all(color: theme.colorScheme.outline),
+        boxShadow: [
           BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.05),
+            color: theme.colorScheme.shadow.withValues(alpha: 0.06),
             blurRadius: 8,
             offset: Offset(0, 2),
           ),
@@ -491,6 +502,7 @@ class _NoteListItemContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     void onPinToggle() {
       ref.read(notesListProvider.notifier).togglePin(note.noteId);
       HapticFeedback.lightImpact();
@@ -509,9 +521,9 @@ class _NoteListItemContent extends ConsumerWidget {
             Expanded(
               child: Text(
                 note.noteTitle,
-                style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -563,8 +575,8 @@ class _NoteListItemContent extends ConsumerWidget {
         SizedBox(height: 0.5.h),
         Text(
           note.preview,
-          style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-            color: Colors.grey.shade600,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
           ),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
@@ -576,12 +588,19 @@ class _NoteListItemContent extends ConsumerWidget {
             SizedBox(width: 2.w),
             Text(
               _formatDate(DateTime.parse(note.createdAt)),
-              style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade500),
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
             Spacer(),
             if (isPinned) Icon(Icons.push_pin, size: 16, color: categoryColor),
             SizedBox(width: 3.w),
-            const Icon(Icons.lock_rounded, size: 16, color: Colors.grey),
+            Icon(
+              Icons.lock_rounded,
+              size: 16,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ],
         ),
       ],
@@ -628,7 +647,7 @@ class _NoteHeader extends StatelessWidget {
               Flexible(
                 child: Text(
                   title,
-                  style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
@@ -692,15 +711,16 @@ class _NotePreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Expanded(
       child: Text(
         softWrap: true,
         preview,
-        style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-          color: Colors.grey.shade600,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
         ),
         maxLines: 7,
-         textScaler: TextScaler.linear(1.05),
+        textScaler: TextScaler.linear(1.05),
         overflow: TextOverflow.ellipsis,
       ),
     );
@@ -722,6 +742,7 @@ class _NoteFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -730,7 +751,11 @@ class _NoteFooter extends StatelessWidget {
         if (isPinned) Icon(Icons.push_pin, size: 16.sp, color: categoryColor),
         SizedBox(width: 4.w),
         if (isEncrypted)
-          Icon(Icons.lock_rounded, size: 16.sp, color: Colors.grey),
+          Icon(
+            Icons.lock_rounded,
+            size: 16.sp,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
       ],
     );
   }
@@ -769,6 +794,7 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -776,15 +802,15 @@ class EmptyState extends StatelessWidget {
           Icon(
             isSearching ? Icons.search_off_rounded : Icons.note_add_rounded,
             size: 36.sp,
-            color: Colors.grey.shade300,
+            color: theme.colorScheme.outline,
           ),
           SizedBox(height: 2.h),
           Text(
             isSearching ? 'No notes found' : 'No notes yet',
-            style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w400,
               fontSize: 18.sp,
-              color: Colors.grey.shade600,
+              color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
           SizedBox(height: 1.h),
@@ -792,8 +818,8 @@ class EmptyState extends StatelessWidget {
             isSearching
                 ? 'Try adjusting your search or filters'
                 : 'Tap the + button to create your first note',
-            style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-              color: Colors.grey.shade500,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.w400,
             ),
             textAlign: TextAlign.center,
@@ -815,7 +841,7 @@ class FilterBottomSheet extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.scaffoldBackgroundColor,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.all(5.w),
@@ -823,9 +849,9 @@ class FilterBottomSheet extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildDragHandle(),
+          _buildDragHandle(context),
           SizedBox(height: 3.h),
-          _buildTitle(),
+          _buildTitle(context),
           SizedBox(height: 2.h),
           ..._buildSortOptions(context, currentSortBy),
           SizedBox(height: 3.h),
@@ -834,25 +860,26 @@ class FilterBottomSheet extends ConsumerWidget {
     );
   }
 
-  Widget _buildDragHandle() {
+  Widget _buildDragHandle(BuildContext context) {
+    final theme = Theme.of(context);
     return Center(
       child: Container(
         width: 12.w,
         height: 0.5.h,
         decoration: BoxDecoration(
-          color: Colors.grey.shade300,
+          color: theme.colorScheme.outline,
           borderRadius: BorderRadius.circular(2),
         ),
       ),
     );
   }
 
-  Widget _buildTitle() {
+  Widget _buildTitle(BuildContext context) {
     return Text(
       'Sort By',
-      style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
-        fontWeight: FontWeight.w600,
-      ),
+      style: Theme.of(
+        context,
+      ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
     );
   }
 
@@ -902,13 +929,13 @@ class FilterBottomSheet extends ConsumerWidget {
       margin: EdgeInsets.only(bottom: 1.h),
       decoration: BoxDecoration(
         color: isSelected
-            ? AppTheme.lightTheme.colorScheme.primary.withOpacity(0.1)
+            ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
             : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isSelected
-              ? AppTheme.lightTheme.colorScheme.primary
-              : Colors.grey.shade300,
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.outline,
           width: isSelected ? 2 : 1,
         ),
       ),
@@ -916,20 +943,20 @@ class FilterBottomSheet extends ConsumerWidget {
         leading: Icon(
           icon,
           color: isSelected
-              ? AppTheme.lightTheme.colorScheme.primary
-              : Colors.grey,
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.onSurfaceVariant,
         ),
         title: Text(
           title,
-          style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
-            color: isSelected ? AppTheme.lightTheme.colorScheme.primary : null,
+            color: isSelected ? Theme.of(context).colorScheme.primary : null,
           ),
         ),
         trailing: isSelected
             ? Icon(
                 Icons.check_circle,
-                color: AppTheme.lightTheme.colorScheme.primary,
+                color: Theme.of(context).colorScheme.primary,
               )
             : null,
         onTap: () => onSortChanged(value),

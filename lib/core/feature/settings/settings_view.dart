@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:my_secure_note_app/core/common/widgets/custom_app_bar.dart';
 import 'package:my_secure_note_app/core/feature/settings/widget/build_by_widget.dart';
-import 'package:my_secure_note_app/core/theme/app_theme.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -55,7 +54,6 @@ class _SettingsPageState extends State<SettingsPage> {
           setState(() {
             isBiometricEnabled = true;
           });
-          // TODO: Save to secure storage that biometric is enabled
         }
       } catch (e) {
         ScaffoldMessenger.of(
@@ -66,7 +64,6 @@ class _SettingsPageState extends State<SettingsPage> {
       setState(() {
         isBiometricEnabled = false;
       });
-      // TODO: Save to secure storage that biometric is disabled
     }
   }
 
@@ -96,14 +93,15 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildSettingsCard() {
+    final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
+        border: Border.all(color: theme.colorScheme.outline),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: theme.colorScheme.shadow.withValues(alpha: 0.08),
             blurRadius: 4,
             offset: const Offset(0, 1),
           ),
@@ -157,6 +155,7 @@ class _SettingsPageState extends State<SettingsPage> {
     bool isFirst = false,
     bool isLast = false,
   }) {
+    final theme = Theme.of(context);
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -164,7 +163,11 @@ class _SettingsPageState extends State<SettingsPage> {
         decoration: BoxDecoration(
           border: isLast
               ? null
-              : const Border(bottom: BorderSide(color: Color(0xFFF3F4F6))),
+              : Border(
+                  bottom: BorderSide(
+                    color: theme.colorScheme.outline.withValues(alpha: 0.6),
+                  ),
+                ),
         ),
         child: Row(
           children: [
@@ -172,12 +175,12 @@ class _SettingsPageState extends State<SettingsPage> {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: AppTheme.lightTheme.colorScheme.primary.withAlpha(38),
+                color: Theme.of(context).colorScheme.primary.withAlpha(38),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 icon,
-                color: AppTheme.lightTheme.colorScheme.primary,
+                color: Theme.of(context).colorScheme.primary,
                 size: 20,
               ),
             ),
@@ -188,24 +191,25 @@ class _SettingsPageState extends State<SettingsPage> {
                 children: [
                   Text(
                     label,
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: theme.textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: Colors.black87,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     sublabel,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF6B7280),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: Color(0xFF9CA3AF)),
+            Icon(
+              Icons.chevron_right,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ],
         ),
       ),
@@ -219,12 +223,17 @@ class _SettingsPageState extends State<SettingsPage> {
     required ValueChanged<bool> onChanged,
     bool isLast = false,
   }) {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: isLast
             ? null
-            : const Border(bottom: BorderSide(color: Color(0xFFF3F4F6))),
+            : Border(
+                bottom: BorderSide(
+                  color: theme.colorScheme.outline.withValues(alpha: 0.6),
+                ),
+              ),
       ),
       child: Row(
         children: [
@@ -232,12 +241,12 @@ class _SettingsPageState extends State<SettingsPage> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppTheme.lightTheme.colorScheme.primary.withAlpha(38),
+              color: Theme.of(context).colorScheme.primary.withAlpha(38),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               icon,
-              color: AppTheme.lightTheme.colorScheme.primary,
+              color: Theme.of(context).colorScheme.primary,
               size: 20,
             ),
           ),
@@ -245,17 +254,16 @@ class _SettingsPageState extends State<SettingsPage> {
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(
-                fontSize: 16,
+              style: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ),
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: AppTheme.lightTheme.colorScheme.primary,
+            activeColor: theme.colorScheme.primary,
           ),
         ],
       ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_secure_note_app/core/common/widgets/custom_icon_widget.dart';
-import 'package:my_secure_note_app/core/theme/app_theme.dart';
 import 'package:sizer/sizer.dart';
  
 
@@ -28,14 +27,14 @@ class EmptyStateWidget extends StatelessWidget {
               width: 40.w,
               height: 40.w,
               decoration: BoxDecoration(
-                color: AppTheme.lightTheme.colorScheme.primary
+                color: Theme.of(context).colorScheme.primary
                     .withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Center(
                 child: CustomIconWidget(
                   iconName: isSearching ? 'search_off' : 'note_add',
-                  color: AppTheme.lightTheme.colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   size: 60,
                 ),
               ),
@@ -43,9 +42,9 @@ class EmptyStateWidget extends StatelessWidget {
             SizedBox(height: 4.h),
             Text(
               isSearching ? 'No notes found' : 'No notes yet',
-              style: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: AppTheme.lightTheme.colorScheme.onSurface,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             SizedBox(height: 2.h),
@@ -53,8 +52,8 @@ class EmptyStateWidget extends StatelessWidget {
               isSearching
                   ? 'No notes match "$searchQuery". Try adjusting your search terms or create a new note.'
                   : 'Start securing your thoughts and ideas with encrypted notes. Your privacy is our priority.',
-              style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
-                color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                 height: 1.5,
               ),
               textAlign: TextAlign.center,
@@ -64,18 +63,18 @@ class EmptyStateWidget extends StatelessWidget {
               onPressed: onCreateNote,
               icon: CustomIconWidget(
                 iconName: 'add',
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onPrimary,
                 size: 20,
               ),
               label: Text(
                 isSearching ? 'Create New Note' : 'Create Your First Note',
-                style: AppTheme.lightTheme.textTheme.labelLarge?.copyWith(
-                  color: Colors.white,
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.lightTheme.colorScheme.primary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 1.5.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

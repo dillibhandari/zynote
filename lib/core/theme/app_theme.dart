@@ -8,12 +8,13 @@ class AppTheme {
 
   // Professional Trust Palette - Security-focused color system
   static const Color primaryLight = Color(0xFF1B365D); // Deep professional blue
-  static const Color primaryDark = Color(0xFF4A90A4); // Supporting blue-gray
+  static const Color primaryDark =
+      Color(0xFFF2F2F2); // Light text/select color for dark UI
   static const Color secondaryLight = Color(0xFF4A90A4); // Supporting blue-gray
   static const Color secondaryDark =
-      Color(0xFF1B365D); // Deep professional blue
+      Color(0xFFB0B0B0); // Muted secondary for dark UI
   static const Color accentLight = Color(0xFF2ECC71); // Success green
-  static const Color accentDark = Color(0xFF2ECC71); // Success green
+  static const Color accentDark = Color(0xFFE6E6E6); // Neutral accent for dark UI
   static const Color warningLight = Color(0xFFF39C12); // Amber for alerts
   static const Color warningDark = Color(0xFFF39C12); // Amber for alerts
   static const Color errorLight =
@@ -23,34 +24,34 @@ class AppTheme {
 
   // Surface colors optimized for mobile readability
   static const Color surfaceLight = Color(0xFFFAFBFC); // Clean background
-  static const Color surfaceDark = Color(0xFF121212); // Dark surface
+  static const Color surfaceDark = Color(0xFF1F1F1F); // Dark surface
   static const Color surfaceVariantLight =
       Color(0xFFF1F3F4); // Subtle differentiation
   static const Color surfaceVariantDark =
-      Color(0xFF1E1E1E); // Dark surface variant
+      Color(0xFF2A2A2A); // Dark surface variant
   static const Color onSurfaceLight = Color(0xFF1C1C1E); // High contrast text
   static const Color onSurfaceDark =
-      Color(0xFFFFFFFF); // High contrast text dark
+      Color(0xFFF5F5F5); // High contrast text dark
   static const Color onSurfaceVariantLight =
       Color(0xFF6C757D); // Secondary text
   static const Color onSurfaceVariantDark =
-      Color(0xFF9E9E9E); // Secondary text dark
+      Color(0xFFB7B7B7); // Secondary text dark
   static const Color outlineLight = Color(0xFFE1E5E9); // Minimal borders
-  static const Color outlineDark = Color(0xFF2D2D2D); // Minimal borders dark
+  static const Color outlineDark = Color(0xFF3A3A3A); // Minimal borders dark
 
   // Card and dialog colors
   static const Color cardLight = Color(0xFFFFFFFF);
-  static const Color cardDark = Color(0xFF1E1E1E);
+  static const Color cardDark = Color(0xFF262626);
   static const Color dialogLight = Color(0xFFFFFFFF);
-  static const Color dialogDark = Color(0xFF2D2D2D);
+  static const Color dialogDark = Color(0xFF2C2C2C);
 
   // Shadow colors for subtle elevation
   static const Color shadowLight = Color(0x0A000000);
-  static const Color shadowDark = Color(0x1AFFFFFF);
+  static const Color shadowDark = Color(0x1A000000);
 
   // Divider colors
   static const Color dividerLight = Color(0xFFE1E5E9);
-  static const Color dividerDark = Color(0xFF2D2D2D);
+  static const Color dividerDark = Color(0xFF2E2E2E);
 
   /// Light theme implementing Contemporary Security Minimalism
   static ThemeData lightTheme = ThemeData(
@@ -58,7 +59,7 @@ class AppTheme {
     colorScheme: ColorScheme(
       brightness: Brightness.light,
       primary: primaryLight,
-      onPrimary: Colors.white,
+      onPrimary: surfaceDark,
       primaryContainer: primaryLight.withValues(alpha: 0.1),
       onPrimaryContainer: primaryLight,
       secondary: secondaryLight,
@@ -342,15 +343,15 @@ class AppTheme {
       primary: primaryDark,
       onPrimary: Colors.white,
       primaryContainer: primaryDark.withValues(alpha: 0.2),
-      onPrimaryContainer: primaryDark,
+      onPrimaryContainer: onSurfaceDark,
       secondary: secondaryDark,
-      onSecondary: Colors.white,
+      onSecondary: surfaceDark,
       secondaryContainer: secondaryDark.withValues(alpha: 0.2),
-      onSecondaryContainer: secondaryDark,
+      onSecondaryContainer: onSurfaceDark,
       tertiary: accentDark,
-      onTertiary: Colors.white,
+      onTertiary: surfaceDark,
       tertiaryContainer: accentDark.withValues(alpha: 0.2),
-      onTertiaryContainer: accentDark,
+      onTertiaryContainer: onSurfaceDark,
       error: errorDark,
       onError: Colors.white,
       surface: surfaceDark,
@@ -359,7 +360,7 @@ class AppTheme {
       outline: outlineDark,
       outlineVariant: outlineDark.withValues(alpha: 0.5),
       shadow: shadowDark,
-      scrim: Colors.black.withValues(alpha: 0.7),
+      scrim: Colors.black.withValues(alpha: 0.6),
       inverseSurface: onSurfaceDark,
       onInverseSurface: surfaceDark,
       inversePrimary: primaryLight,
@@ -371,7 +372,7 @@ class AppTheme {
 
     // AppBar theme for dark mode
     appBarTheme: AppBarTheme(
-      backgroundColor: surfaceDark,
+      backgroundColor: surfaceVariantDark,
       foregroundColor: onSurfaceDark,
       elevation: 0,
       shadowColor: shadowDark,
@@ -398,8 +399,8 @@ class AppTheme {
     ),
 
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      backgroundColor: surfaceDark,
-      selectedItemColor: primaryDark,
+      backgroundColor: surfaceVariantDark,
+      selectedItemColor: onSurfaceDark,
       unselectedItemColor: onSurfaceVariantDark,
       elevation: 8.0,
       type: BottomNavigationBarType.fixed,
@@ -417,7 +418,7 @@ class AppTheme {
 
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: accentDark,
-      foregroundColor: Colors.white,
+      foregroundColor: surfaceDark,
       elevation: 4.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
@@ -426,7 +427,7 @@ class AppTheme {
 
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.white,
+        foregroundColor: surfaceDark,
         backgroundColor: primaryDark,
         elevation: 2.0,
         shadowColor: shadowDark,
@@ -444,7 +445,7 @@ class AppTheme {
 
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-        foregroundColor: primaryDark,
+        foregroundColor: onSurfaceDark,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         side: BorderSide(color: outlineDark, width: 1),
         shape: RoundedRectangleBorder(
@@ -460,7 +461,7 @@ class AppTheme {
 
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: primaryDark,
+        foregroundColor: onSurfaceDark,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
@@ -476,7 +477,7 @@ class AppTheme {
     textTheme: _buildTextTheme(isLight: false),
 
     inputDecorationTheme: InputDecorationTheme(
-      fillColor: surfaceDark,
+      fillColor: surfaceVariantDark,
       filled: true,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
@@ -488,7 +489,7 @@ class AppTheme {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: primaryDark, width: 2),
+        borderSide: BorderSide(color: onSurfaceDark, width: 2),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
@@ -514,13 +515,13 @@ class AppTheme {
     switchTheme: SwitchThemeData(
       thumbColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return accentDark;
+          return onSurfaceDark;
         }
         return onSurfaceVariantDark;
       }),
       trackColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return accentDark.withValues(alpha: 0.3);
+          return onSurfaceVariantDark.withValues(alpha: 0.4);
         }
         return outlineDark;
       }),
@@ -529,11 +530,11 @@ class AppTheme {
     checkboxTheme: CheckboxThemeData(
       fillColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return accentDark;
+          return onSurfaceDark;
         }
         return Colors.transparent;
       }),
-      checkColor: WidgetStateProperty.all(Colors.white),
+      checkColor: WidgetStateProperty.all(surfaceDark),
       side: BorderSide(color: outlineDark, width: 1),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4.0),
@@ -543,30 +544,30 @@ class AppTheme {
     radioTheme: RadioThemeData(
       fillColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return accentDark;
+          return onSurfaceDark;
         }
         return outlineDark;
       }),
     ),
 
     progressIndicatorTheme: ProgressIndicatorThemeData(
-      color: primaryDark,
+      color: onSurfaceDark,
       linearTrackColor: outlineDark,
       circularTrackColor: outlineDark,
     ),
 
     sliderTheme: SliderThemeData(
-      activeTrackColor: primaryDark,
-      thumbColor: primaryDark,
-      overlayColor: primaryDark.withValues(alpha: 0.2),
+      activeTrackColor: onSurfaceDark,
+      thumbColor: onSurfaceDark,
+      overlayColor: onSurfaceDark.withValues(alpha: 0.2),
       inactiveTrackColor: outlineDark,
       trackHeight: 4.0,
     ),
 
     tabBarTheme: TabBarThemeData(
-      labelColor: primaryDark,
+      labelColor: onSurfaceDark,
       unselectedLabelColor: onSurfaceVariantDark,
-      indicatorColor: primaryDark,
+      indicatorColor: onSurfaceDark,
       indicatorSize: TabBarIndicatorSize.label,
       labelStyle: GoogleFonts.inter(
         fontSize: 14,
@@ -582,11 +583,11 @@ class AppTheme {
 
     tooltipTheme: TooltipThemeData(
       decoration: BoxDecoration(
-        color: onSurfaceDark.withValues(alpha: 0.9),
+        color: surfaceVariantDark,
         borderRadius: BorderRadius.circular(8),
       ),
       textStyle: GoogleFonts.inter(
-        color: surfaceDark,
+        color: onSurfaceDark,
         fontSize: 12,
         fontWeight: FontWeight.w400,
       ),
@@ -594,13 +595,13 @@ class AppTheme {
     ),
 
     snackBarTheme: SnackBarThemeData(
-      backgroundColor: onSurfaceDark,
+      backgroundColor: surfaceVariantDark,
       contentTextStyle: GoogleFonts.inter(
-        color: surfaceDark,
+        color: onSurfaceDark,
         fontSize: 14,
         fontWeight: FontWeight.w400,
       ),
-      actionTextColor: accentDark,
+      actionTextColor: onSurfaceDark,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),

@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _AuthPreferenceKeys {
   static const viewedOnboardingScreen = 'viewed_onboarding_screen';
   static const userPinCode = 'user_pin_code';
   static const userPinCodeInitial = 'user_pin_code_initial';
+  static const themeMode = 'theme_mode';
   static String privateKey = "private_key";
   static String publicKey = "public_key";
   static String globalKey = "global_key";
@@ -70,6 +72,30 @@ class AppSettings {
 
   set recentlyAddedNoteId(String key) =>
       _preferences.setString(_AuthPreferenceKeys.recentlyAddedNoteId, key);
+
+  // Theme mode
+  ThemeMode get themeMode {
+    final value = _preferences.getString(_AuthPreferenceKeys.themeMode);
+    switch (value) {
+      case 'dark':
+        return ThemeMode.dark;
+      case 'system':
+        return ThemeMode.system;
+      case 'light':
+      default:
+        return ThemeMode.light;
+    }
+  }
+
+  set themeMode(ThemeMode mode) {
+    final value = switch (mode) {
+      ThemeMode.dark => 'dark',
+      ThemeMode.system => 'system',
+      ThemeMode.light => 'light',
+    };
+    _preferences.setString(_AuthPreferenceKeys.themeMode, value);
+  }
+
 }
 
 abstract class Preferences {

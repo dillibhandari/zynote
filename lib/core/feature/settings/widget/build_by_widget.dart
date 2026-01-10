@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
- import 'package:package_info_plus/package_info_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sizer/sizer.dart';
 
 class BuildByWidget extends StatelessWidget {
@@ -26,27 +26,25 @@ class BuildByWidget extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               versionText,
-              style: const TextStyle(
-                fontSize: 10,
-                color: Color(0xFF6B7280),
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                 fontWeight: FontWeight.w400,
               ),
             ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Icon(
                   Icons.flash_on_rounded,
                   size: 18,
-                  color: Color(0xFF6B7280),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   'Powered by Yak Stack Solution',
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: Color(0xFF6B7280),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -72,15 +70,17 @@ class AppLogo extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(10.sp),
-        gradient: const LinearGradient(
-          colors: [Colors.white, Colors.white],
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).colorScheme.surface,
+            Theme.of(context).colorScheme.surface,
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.12),
             blurRadius: 20,
             offset: const Offset(0, 6),
           ),

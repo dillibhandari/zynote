@@ -11,25 +11,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final appBarTheme = theme.appBarTheme;
+    final iconColor = appBarTheme.iconTheme?.color ?? theme.colorScheme.onSurface;
     return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
+      backgroundColor: appBarTheme.backgroundColor,
+      foregroundColor: appBarTheme.foregroundColor,
+      elevation: appBarTheme.elevation ?? 0,
+      shadowColor: appBarTheme.shadowColor,
+      surfaceTintColor: appBarTheme.surfaceTintColor,
       automaticallyImplyLeading: false,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios, color: Colors.black87),
+        icon: Icon(Icons.arrow_back_ios, color: iconColor),
         onPressed: onBack ?? () => Navigator.pop(context),
       ),
       title: Text(
         title,
-        style: const TextStyle(
-          color: Colors.black87,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
+        style: appBarTheme.titleTextStyle,
       ),
-      bottom: const PreferredSize(
-        preferredSize: Size.fromHeight(1),
-        child: Divider(height: 1, color: Color(0xFFE5E7EB)),
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1),
+        child: Divider(height: 1, color: theme.dividerColor),
       ),
     );
   }

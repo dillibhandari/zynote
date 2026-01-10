@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../../theme/app_theme.dart';
 import './empty_state_widget.dart';
 import './note_card_widget.dart';
 
@@ -42,7 +41,7 @@ class NotesListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return _buildLoadingState();
+      return _buildLoadingState(context);
     }
 
     if (notes.isEmpty) {
@@ -58,7 +57,7 @@ class NotesListWidget extends StatelessWidget {
         onRefresh();
         await Future.delayed(const Duration(milliseconds: 500));
       },
-      color: AppTheme.lightTheme.colorScheme.primary,
+      color: Theme.of(context).colorScheme.primary,
       child: ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         itemCount: notes.length,
@@ -80,7 +79,7 @@ class NotesListWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildLoadingState() {
+  Widget _buildLoadingState(BuildContext context) {
     return ListView.builder(
       itemCount: 5,
       itemBuilder: (context, index) {
@@ -102,8 +101,8 @@ class NotesListWidget extends StatelessWidget {
                         child: Container(
                           height: 2.h,
                           decoration: BoxDecoration(
-                            color: AppTheme
-                                .lightTheme.colorScheme.onSurfaceVariant
+                            color: Theme.of(context)
+                                .colorScheme.onSurfaceVariant
                                 .withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(4),
                           ),
@@ -114,8 +113,8 @@ class NotesListWidget extends StatelessWidget {
                         width: 6.w,
                         height: 2.h,
                         decoration: BoxDecoration(
-                          color: AppTheme
-                              .lightTheme.colorScheme.onSurfaceVariant
+                          color: Theme.of(context)
+                              .colorScheme.onSurfaceVariant
                               .withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(4),
                         ),
@@ -127,7 +126,7 @@ class NotesListWidget extends StatelessWidget {
                     height: 1.5.h,
                     width: 80.w,
                     decoration: BoxDecoration(
-                      color: AppTheme.lightTheme.colorScheme.onSurfaceVariant
+                      color: Theme.of(context).colorScheme.onSurfaceVariant
                           .withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(4),
                     ),
@@ -137,7 +136,7 @@ class NotesListWidget extends StatelessWidget {
                     height: 1.5.h,
                     width: 60.w,
                     decoration: BoxDecoration(
-                      color: AppTheme.lightTheme.colorScheme.onSurfaceVariant
+                      color: Theme.of(context).colorScheme.onSurfaceVariant
                           .withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(4),
                     ),
@@ -150,8 +149,8 @@ class NotesListWidget extends StatelessWidget {
                         width: 20.w,
                         height: 1.5.h,
                         decoration: BoxDecoration(
-                          color: AppTheme
-                              .lightTheme.colorScheme.onSurfaceVariant
+                          color: Theme.of(context)
+                              .colorScheme.onSurfaceVariant
                               .withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -160,8 +159,8 @@ class NotesListWidget extends StatelessWidget {
                         width: 15.w,
                         height: 1.5.h,
                         decoration: BoxDecoration(
-                          color: AppTheme
-                              .lightTheme.colorScheme.onSurfaceVariant
+                          color: Theme.of(context)
+                              .colorScheme.onSurfaceVariant
                               .withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(4),
                         ),

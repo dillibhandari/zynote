@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_secure_note_app/core/theme/app_theme.dart';
 import 'package:sizer/sizer.dart';
 
 class PinInputDisplay extends StatelessWidget {
@@ -30,15 +29,15 @@ class PinInputDisplay extends StatelessWidget {
               shape: BoxShape.circle,
               color: isFilled
                   ? (isError
-                        ? AppTheme.lightTheme.colorScheme.error
-                        : AppTheme.lightTheme.primaryColor)
+                        ? Theme.of(context).colorScheme.error
+                        : Theme.of(context).primaryColor)
                   : Colors.transparent,
               border: Border.all(
                 color: isError
-                    ? AppTheme.lightTheme.colorScheme.error
+                    ? Theme.of(context).colorScheme.error
                     : (isFilled
-                          ? AppTheme.lightTheme.primaryColor
-                          : AppTheme.lightTheme.colorScheme.outline),
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).colorScheme.outline),
                 width: 2,
               ),
             ),

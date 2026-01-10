@@ -100,7 +100,10 @@ class _CustomQuillEditorState extends State<CustomQuillEditor> {
                               style: TextStyle(
                                 fontSize: 16,
                                 height: 1.5,
-                                color: Colors.grey.shade400,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant
+                                    .withValues(alpha: 0.6),
                                 fontStyle: FontStyle.italic,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -129,12 +132,13 @@ class _CustomQuillEditorState extends State<CustomQuillEditor> {
 
   BoxDecoration _editorDecoration() {
     return BoxDecoration(
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.surface,
       borderRadius: BorderRadius.circular(8),
     );
   }
 
   QuillEditorConfig _editorConfig() {
+    final theme = Theme.of(context);
     return QuillEditorConfig(
       scrollable: true,
       expands: false,
@@ -148,7 +152,11 @@ class _CustomQuillEditorState extends State<CustomQuillEditor> {
       padding: const EdgeInsets.all(16),
       customStyles: DefaultStyles(
         paragraph: DefaultTextBlockStyle(
-          TextStyle(fontSize: 16, height: 1.5, color: Colors.black87),
+          TextStyle(
+            fontSize: 16,
+            height: 1.5,
+            color: theme.colorScheme.onSurface,
+          ),
           const HorizontalSpacing(2, 8),
           const VerticalSpacing(0, 0),
           const VerticalSpacing(0, 0),
@@ -158,16 +166,16 @@ class _CustomQuillEditorState extends State<CustomQuillEditor> {
         italic: const TextStyle(fontStyle: FontStyle.italic),
         underline: const TextStyle(decoration: TextDecoration.underline),
         strikeThrough: const TextStyle(decoration: TextDecoration.lineThrough),
-        link: const TextStyle(
-          color: Colors.blue,
+        link: TextStyle(
+          color: theme.colorScheme.primary,
           decoration: TextDecoration.underline,
         ),
         h1: DefaultTextBlockStyle(
-          const TextStyle(
+          TextStyle(
             fontSize: 28,
             height: 1.3,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: theme.colorScheme.onSurface,
           ),
           const HorizontalSpacing(0, 0),
           const VerticalSpacing(16, 8),
@@ -175,11 +183,11 @@ class _CustomQuillEditorState extends State<CustomQuillEditor> {
           null,
         ),
         h2: DefaultTextBlockStyle(
-          const TextStyle(
+          TextStyle(
             fontSize: 24,
             height: 1.3,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: theme.colorScheme.onSurface,
           ),
           const HorizontalSpacing(0, 0),
           const VerticalSpacing(12, 8),
@@ -187,11 +195,11 @@ class _CustomQuillEditorState extends State<CustomQuillEditor> {
           null,
         ),
         h3: DefaultTextBlockStyle(
-          const TextStyle(
+          TextStyle(
             fontSize: 20,
             height: 1.3,
             fontWeight: FontWeight.w600,
-            color: Colors.black87,
+            color: theme.colorScheme.onSurface,
           ),
           const HorizontalSpacing(0, 0),
           const VerticalSpacing(10, 6),
@@ -219,6 +227,7 @@ class TimeStampEmbedBuilder extends EmbedBuilder {
 
   @override
   Widget build(BuildContext context, EmbedContext embedContext) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -227,12 +236,15 @@ class TimeStampEmbedBuilder extends EmbedBuilder {
           Icon(
             Icons.access_time_rounded,
             size: 16,
-            color: Colors.grey.shade600,
+            color: theme.colorScheme.onSurfaceVariant,
           ),
           const SizedBox(width: 4),
           Text(
             embedContext.node.value.data as String,
-            style: TextStyle(color: Colors.grey.shade700, fontSize: 14),
+            style: TextStyle(
+              color: theme.colorScheme.onSurfaceVariant,
+              fontSize: 14,
+            ),
           ),
         ],
       ),

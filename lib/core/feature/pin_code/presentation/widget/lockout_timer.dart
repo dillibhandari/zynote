@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_secure_note_app/core/common/widgets/custom_icon_widget.dart';
-import 'package:my_secure_note_app/core/theme/app_theme.dart';
 import 'package:sizer/sizer.dart';
 
 class LockoutTimer extends StatefulWidget {
@@ -90,9 +89,9 @@ class _LockoutTimerState extends State<LockoutTimer>
                   height: 40.w,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.lightTheme.colorScheme.surface,
+                    color: Theme.of(context).colorScheme.surface,
                     border: Border.all(
-                      color: AppTheme.lightTheme.colorScheme.outline.withValues(
+                      color: Theme.of(context).colorScheme.outline.withValues(
                         alpha: 0.3,
                       ),
                       width: 2,
@@ -111,7 +110,7 @@ class _LockoutTimerState extends State<LockoutTimer>
                         strokeWidth: 4,
                         backgroundColor: Colors.transparent,
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          AppTheme.lightTheme.colorScheme.error,
+                          Theme.of(context).colorScheme.error,
                         ),
                       ),
                     );
@@ -123,15 +122,15 @@ class _LockoutTimerState extends State<LockoutTimer>
                   children: [
                     CustomIconWidget(
                       iconName: 'lock',
-                      color: AppTheme.lightTheme.colorScheme.error,
+                      color: Theme.of(context).colorScheme.error,
                       size: 8.w,
                     ),
                     SizedBox(height: 1.h),
                     Text(
                       _formatTime(_remainingSeconds),
-                      style: AppTheme.lightTheme.textTheme.headlineSmall
+                      style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(
-                            color: AppTheme.lightTheme.colorScheme.error,
+                            color: Theme.of(context).colorScheme.error,
                             fontWeight: FontWeight.w600,
                           ),
                     ),
@@ -144,8 +143,8 @@ class _LockoutTimerState extends State<LockoutTimer>
           // Lockout message
           Text(
             'Too many failed attempts',
-            style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.error,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.error,
               fontWeight: FontWeight.w600,
             ),
             textAlign: TextAlign.center,
@@ -153,8 +152,8 @@ class _LockoutTimerState extends State<LockoutTimer>
           SizedBox(height: 1.h),
           Text(
             'Please wait before trying again',
-            style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             textAlign: TextAlign.center,
           ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_secure_note_app/core/common/widgets/custom_icon_widget.dart';
-import 'package:my_secure_note_app/core/theme/app_theme.dart';
 import 'package:sizer/sizer.dart';
  
 
@@ -22,7 +21,7 @@ class ShareOptionsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         boxShadow: [
           BoxShadow(
@@ -40,7 +39,7 @@ class ShareOptionsWidget extends StatelessWidget {
             height: 0.5.h,
             margin: EdgeInsets.only(top: 2.h),
             decoration: BoxDecoration(
-              color: AppTheme.lightTheme.colorScheme.outline,
+              color: Theme.of(context).colorScheme.outline,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -55,7 +54,7 @@ class ShareOptionsWidget extends StatelessWidget {
                     Text(
                       'Share Encrypted Note',
                       style:
-                          AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+                          Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -63,7 +62,7 @@ class ShareOptionsWidget extends StatelessWidget {
                       onTap: onClose,
                       child: CustomIconWidget(
                         iconName: 'close',
-                        color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                         size: 24,
                       ),
                     ),
@@ -92,7 +91,7 @@ class ShareOptionsWidget extends StatelessWidget {
                         child: Text(
                           'All sharing options maintain end-to-end encryption',
                           style:
-                              AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Colors.orange.withValues(alpha: 0.8),
                           ),
                         ),
@@ -106,6 +105,7 @@ class ShareOptionsWidget extends StatelessWidget {
                   title: 'Secure Link',
                   subtitle: 'Generate encrypted link with expiration',
                   onTap: onSecureLink,
+                  context: context,
                 ),
                 SizedBox(height: 2.h),
                 _buildShareOption(
@@ -113,6 +113,7 @@ class ShareOptionsWidget extends StatelessWidget {
                   title: 'QR Code',
                   subtitle: 'Share via encrypted QR code',
                   onTap: onQRCode,
+                  context: context,
                 ),
                 SizedBox(height: 2.h),
                 _buildShareOption(
@@ -120,6 +121,7 @@ class ShareOptionsWidget extends StatelessWidget {
                   title: 'Platform Share',
                   subtitle: 'Use system share with encryption warning',
                   onTap: onPlatformShare,
+                  context: context,
                 ),
                 SizedBox(height: 2.h),
               ],
@@ -135,16 +137,17 @@ class ShareOptionsWidget extends StatelessWidget {
     required String title,
     required String subtitle,
     required VoidCallback onTap,
+    required BuildContext context,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(3.w),
         decoration: BoxDecoration(
-          color: AppTheme.lightTheme.colorScheme.surface,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: AppTheme.lightTheme.colorScheme.outline,
+            color: Theme.of(context).colorScheme.outline,
             width: 1,
           ),
         ),
@@ -154,14 +157,14 @@ class ShareOptionsWidget extends StatelessWidget {
               width: 12.w,
               height: 12.w,
               decoration: BoxDecoration(
-                color: AppTheme.lightTheme.colorScheme.primary
+                color: Theme.of(context).colorScheme.primary
                     .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Center(
                 child: CustomIconWidget(
                   iconName: iconName,
-                  color: AppTheme.lightTheme.colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   size: 24,
                 ),
               ),
@@ -173,15 +176,15 @@ class ShareOptionsWidget extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: AppTheme.lightTheme.textTheme.titleSmall?.copyWith(
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   SizedBox(height: 0.5.h),
                   Text(
                     subtitle,
-                    style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                      color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -189,7 +192,7 @@ class ShareOptionsWidget extends StatelessWidget {
             ),
             CustomIconWidget(
               iconName: 'arrow_forward_ios',
-              color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               size: 16,
             ),
           ],

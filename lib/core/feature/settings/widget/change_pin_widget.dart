@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_secure_note_app/core/common/widgets/custom_app_bar.dart';
 import 'package:my_secure_note_app/core/preferances/shared_preferences.dart';
-import 'package:my_secure_note_app/core/theme/app_theme.dart';
 
 class ChangePINPage extends StatefulWidget {
   final String title;
@@ -31,9 +30,9 @@ class _ChangePINPageState extends State<ChangePINPage> {
 
     if (currentPin.isEmpty || newPin.isEmpty || confirmPin.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('All fields are required'),
-          backgroundColor: Colors.red,
+        SnackBar(
+          content: const Text('All fields are required'),
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
       return;
@@ -41,9 +40,9 @@ class _ChangePINPageState extends State<ChangePINPage> {
 
     if (AppSettings().getUserPinCode != currentPin) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Current PIN does not match'),
-          backgroundColor: Colors.red,
+        SnackBar(
+          content: const Text('Current PIN does not match'),
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
       return;
@@ -51,9 +50,9 @@ class _ChangePINPageState extends State<ChangePINPage> {
 
     if (newPin != confirmPin) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('New PIN and Confirm PIN do not match'),
-          backgroundColor: Colors.red,
+        SnackBar(
+          content: const Text('New PIN and Confirm PIN do not match'),
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
       return;
@@ -62,15 +61,18 @@ class _ChangePINPageState extends State<ChangePINPage> {
     AppSettings().userPinCode = confirmPin;
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
         content: Row(
           children: [
-            Icon(Icons.check, color: Colors.white),
-            SizedBox(width: 8),
-            Text('PIN updated successfully'),
+            Icon(
+              Icons.check,
+              color: Theme.of(context).colorScheme.onTertiary,
+            ),
+            const SizedBox(width: 8),
+            const Text('PIN updated successfully'),
           ],
         ),
-        backgroundColor: Color(0xFF16A34A),
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
       ),
     );
 
@@ -94,12 +96,14 @@ class _ChangePINPageState extends State<ChangePINPage> {
         child: Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFE5E7EB)),
+            border: Border.all(color: Theme.of(context).colorScheme.outline),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Theme.of(context).colorScheme.shadow.withValues(
+                  alpha: 0.08,
+                ),
                 blurRadius: 4,
                 offset: const Offset(0, 1),
               ),
@@ -108,12 +112,11 @@ class _ChangePINPageState extends State<ChangePINPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Change PIN',
-                style: TextStyle(
-                  fontSize: 18,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 24),
@@ -137,8 +140,11 @@ class _ChangePINPageState extends State<ChangePINPage> {
                 child: ElevatedButton(
                   onPressed: isValid ? _handlePinChange : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.lightTheme.colorScheme.primary,
-                    disabledBackgroundColor: const Color(0xFFD1D5DB),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    disabledBackgroundColor: Theme.of(context)
+                        .colorScheme
+                        .outline
+                        .withValues(alpha: 0.6),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -167,10 +173,9 @@ class _ChangePINPageState extends State<ChangePINPage> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 14,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
             fontWeight: FontWeight.w500,
-            color: Color(0xFF374151),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
         const SizedBox(height: 8),
@@ -184,19 +189,23 @@ class _ChangePINPageState extends State<ChangePINPage> {
             hintText: hint,
             counterText: '',
             filled: true,
-            fillColor: Colors.white,
+            fillColor: Theme.of(context).colorScheme.surface,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFFD1D5DB)),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFFD1D5DB)),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
-                color: AppTheme.lightTheme.colorScheme.primary,
+                color: Theme.of(context).colorScheme.primary,
                 width: 2,
               ),
             ),

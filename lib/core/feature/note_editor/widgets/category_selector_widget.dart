@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_secure_note_app/core/common/widgets/custom_icon_widget.dart';
-import 'package:my_secure_note_app/core/theme/app_theme.dart';
 import 'package:sizer/sizer.dart';
 
 class CategorySelectorWidget extends StatelessWidget {
@@ -19,12 +18,12 @@ class CategorySelectorWidget extends StatelessWidget {
       {
         'name': 'Personal',
         'icon': 'person',
-        'color': AppTheme.lightTheme.colorScheme.primary
+        'color': Theme.of(context).colorScheme.primary
       },
       {
         'name': 'Work',
         'icon': 'work',
-        'color': AppTheme.lightTheme.colorScheme.secondary
+        'color': Theme.of(context).colorScheme.secondary
       },
       {
         'name': 'Finance',
@@ -43,8 +42,8 @@ class CategorySelectorWidget extends StatelessWidget {
         children: [
           Text(
             'Category',
-            style: AppTheme.lightTheme.textTheme.titleSmall?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
           SizedBox(height: 1.h),
@@ -66,12 +65,12 @@ class CategorySelectorWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: isSelected
                           ? (category['color'] as Color).withValues(alpha: 0.1)
-                          : AppTheme.lightTheme.colorScheme.surface,
+                          : Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                         color: isSelected
                             ? (category['color'] as Color)
-                            : AppTheme.lightTheme.colorScheme.outline,
+                            : Theme.of(context).colorScheme.outline,
                         width: 1,
                       ),
                     ),
@@ -82,19 +81,19 @@ class CategorySelectorWidget extends StatelessWidget {
                           iconName: category['icon'] as String,
                           color: isSelected
                               ? (category['color'] as Color)
-                              : AppTheme
-                                  .lightTheme.colorScheme.onSurfaceVariant,
+                              : Theme.of(context)
+                                  .colorScheme.onSurfaceVariant,
                           size: 16,
                         ),
                         SizedBox(width: 1.w),
                         Text(
                           category['name'] as String,
                           style:
-                              AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: isSelected
                                 ? (category['color'] as Color)
-                                : AppTheme
-                                    .lightTheme.colorScheme.onSurfaceVariant,
+                                : Theme.of(context)
+                                    .colorScheme.onSurfaceVariant,
                             fontWeight:
                                 isSelected ? FontWeight.w600 : FontWeight.w400,
                           ),

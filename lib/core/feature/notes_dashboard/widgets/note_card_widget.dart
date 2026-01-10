@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:my_secure_note_app/core/common/widgets/custom_icon_widget.dart';
-import 'package:my_secure_note_app/core/theme/app_theme.dart';
 import 'package:sizer/sizer.dart';
  
 
@@ -40,24 +39,24 @@ class NoteCardWidget extends StatelessWidget {
           children: [
             SlidableAction(
               onPressed: (_) => onEdit(),
-              backgroundColor: AppTheme.lightTheme.colorScheme.tertiary,
-              foregroundColor: Colors.white,
+              backgroundColor: Theme.of(context).colorScheme.tertiary,
+              foregroundColor: Theme.of(context).colorScheme.onTertiary,
               icon: Icons.edit,
               label: 'Edit',
               borderRadius: BorderRadius.circular(12),
             ),
             SlidableAction(
               onPressed: (_) => onShare(),
-              backgroundColor: AppTheme.lightTheme.colorScheme.secondary,
-              foregroundColor: Colors.white,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              foregroundColor: Theme.of(context).colorScheme.onSecondary,
               icon: Icons.share,
               label: 'Share',
               borderRadius: BorderRadius.circular(12),
             ),
             SlidableAction(
               onPressed: (_) => onArchive(),
-              backgroundColor: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
-              foregroundColor: Colors.white,
+              backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
+              foregroundColor: Theme.of(context).colorScheme.onInverseSurface,
               icon: Icons.archive,
               label: 'Archive',
               borderRadius: BorderRadius.circular(12),
@@ -69,8 +68,8 @@ class NoteCardWidget extends StatelessWidget {
           children: [
             SlidableAction(
               onPressed: (_) => _showDeleteConfirmation(context),
-              backgroundColor: AppTheme.lightTheme.colorScheme.error,
-              foregroundColor: Colors.white,
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
               icon: Icons.delete,
               label: 'Delete',
               borderRadius: BorderRadius.circular(12),
@@ -95,7 +94,7 @@ class NoteCardWidget extends StatelessWidget {
                       Expanded(
                         child: Text(
                           note['title'] ?? 'Untitled Note',
-                          style: AppTheme.lightTheme.textTheme.titleMedium
+                          style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -105,7 +104,7 @@ class NoteCardWidget extends StatelessWidget {
                       ),
                       CustomIconWidget(
                         iconName: 'lock',
-                        color: AppTheme.lightTheme.colorScheme.tertiary,
+                        color: Theme.of(context).colorScheme.tertiary,
                         size: 18,
                       ),
                     ],
@@ -113,8 +112,8 @@ class NoteCardWidget extends StatelessWidget {
                   SizedBox(height: 1.h),
                   Text(
                     note['preview'] ?? 'No preview available',
-                    style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-                      color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -127,15 +126,15 @@ class NoteCardWidget extends StatelessWidget {
                         padding: EdgeInsets.symmetric(
                             horizontal: 3.w, vertical: 0.5.h),
                         decoration: BoxDecoration(
-                          color: AppTheme.lightTheme.colorScheme.primary
+                          color: Theme.of(context).colorScheme.primary
                               .withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Text(
                           note['category'] ?? 'General',
-                          style: AppTheme.lightTheme.textTheme.labelSmall
+                          style: Theme.of(context).textTheme.labelSmall
                               ?.copyWith(
-                            color: AppTheme.lightTheme.colorScheme.primary,
+                            color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -143,9 +142,9 @@ class NoteCardWidget extends StatelessWidget {
                       Text(
                         _formatDate(note['createdAt']),
                         style:
-                            AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
+                            Theme.of(context).textTheme.bodySmall?.copyWith(
                           color:
-                              AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                              Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -166,11 +165,11 @@ class NoteCardWidget extends StatelessWidget {
         return AlertDialog(
           title: Text(
             'Delete Note',
-            style: AppTheme.lightTheme.textTheme.titleLarge,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           content: Text(
             'Are you sure you want to delete this note? This action cannot be undone.',
-            style: AppTheme.lightTheme.textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           actions: [
             TextButton(
@@ -178,7 +177,7 @@ class NoteCardWidget extends StatelessWidget {
               child: Text(
                 'Cancel',
                 style: TextStyle(
-                    color: AppTheme.lightTheme.colorScheme.onSurfaceVariant),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
             ),
             ElevatedButton(
@@ -187,7 +186,7 @@ class NoteCardWidget extends StatelessWidget {
                 onDelete();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.lightTheme.colorScheme.error,
+                backgroundColor: Theme.of(context).colorScheme.error,
               ),
               child: const Text('Delete'),
             ),
@@ -213,7 +212,7 @@ class NoteCardWidget extends StatelessWidget {
                 width: 12.w,
                 height: 0.5.h,
                 decoration: BoxDecoration(
-                  color: AppTheme.lightTheme.colorScheme.onSurfaceVariant
+                  color: Theme.of(context).colorScheme.onSurfaceVariant
                       .withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
@@ -254,12 +253,12 @@ class NoteCardWidget extends StatelessWidget {
     return ListTile(
       leading: CustomIconWidget(
         iconName: icon.toString().split('.').last,
-        color: AppTheme.lightTheme.colorScheme.onSurface,
+        color: Theme.of(context).colorScheme.onSurface,
         size: 24,
       ),
       title: Text(
         title,
-        style: AppTheme.lightTheme.textTheme.bodyLarge,
+        style: Theme.of(context).textTheme.bodyLarge,
       ),
       onTap: () {
         Navigator.of(context).pop();

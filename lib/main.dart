@@ -11,6 +11,7 @@ import 'package:sizer/sizer.dart';
 import 'package:my_secure_note_app/core/preferances/shared_preferences.dart';
 import 'package:my_secure_note_app/core/router/app_router.dart';
 import 'package:my_secure_note_app/core/theme/app_theme.dart';
+import 'package:my_secure_note_app/core/theme/theme_provider.dart';
 
 final sharedPreferencesProvider = Provider<SharedPreferences>(
   (_) => throw UnimplementedError(),
@@ -37,6 +38,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(goRouterProvider);
+    final themeMode = ref.watch(themeModeProvider);
 
     return Sizer(
       builder: (context, orientation, deviceType) {
@@ -45,7 +47,7 @@ class MyApp extends ConsumerWidget {
 
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode: ThemeMode.light,
+          themeMode: themeMode,
 
           routerConfig: router,
 

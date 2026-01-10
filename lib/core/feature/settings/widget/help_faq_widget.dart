@@ -36,12 +36,14 @@ class FAQPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFE5E7EB)),
+            border: Border.all(color: Theme.of(context).colorScheme.outline),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Theme.of(context).colorScheme.shadow.withValues(
+                  alpha: 0.08,
+                ),
                 blurRadius: 4,
                 offset: const Offset(0, 1),
               ),
@@ -50,18 +52,22 @@ class FAQPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.all(24),
+              Padding(
+                padding: const EdgeInsets.all(24),
                 child: Text(
                   'Frequently Asked Questions',
-                  style: TextStyle(
-                    fontSize: 18,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ),
-              const Divider(height: 1, color: Color(0xFFF3F4F6)),
+              Divider(
+                height: 1,
+                color: Theme.of(context).colorScheme.outline.withValues(
+                  alpha: 0.6,
+                ),
+              ),
               ...faqs.map(
                 (faq) =>
                     FAQItem(question: faq['question']!, answer: faq['answer']!),
@@ -105,10 +111,9 @@ class _FAQItemState extends State<FAQItem> {
                 Expanded(
                   child: Text(
                     widget.question,
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: Colors.black87,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -116,7 +121,7 @@ class _FAQItemState extends State<FAQItem> {
                   _isExpanded
                       ? Icons.keyboard_arrow_up
                       : Icons.keyboard_arrow_down,
-                  color: const Color(0xFF9CA3AF),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ],
             ),
@@ -127,14 +132,16 @@ class _FAQItemState extends State<FAQItem> {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             child: Text(
               widget.answer,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Color(0xFF6B7280),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                 height: 1.5,
               ),
             ),
           ),
-        const Divider(height: 1, color: Color(0xFFF3F4F6)),
+        Divider(
+          height: 1,
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.6),
+        ),
       ],
     );
   }

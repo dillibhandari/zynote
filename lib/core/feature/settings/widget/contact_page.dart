@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_secure_note_app/core/common/widgets/custom_app_bar.dart';
-import 'package:my_secure_note_app/core/theme/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactPage extends StatefulWidget {
@@ -51,9 +50,9 @@ class _ContactPageState extends State<ContactPage> {
       await launchUrl(emailUri, mode: LaunchMode.externalApplication);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Email app opened'),
-          backgroundColor: Color(0xFF16A34A),
+        SnackBar(
+          content: const Text('Email app opened'),
+          backgroundColor: Theme.of(context).colorScheme.tertiary,
         ),
       );
 
@@ -62,9 +61,9 @@ class _ContactPageState extends State<ContactPage> {
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Unable to open email app'),
-          backgroundColor: Colors.red,
+        SnackBar(
+          content: const Text('Unable to open email app'),
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
     }
@@ -84,12 +83,14 @@ class _ContactPageState extends State<ContactPage> {
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFE5E7EB)),
+            border: Border.all(color: Theme.of(context).colorScheme.outline),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Theme.of(context).colorScheme.shadow.withValues(
+                  alpha: 0.08,
+                ),
                 blurRadius: 4,
                 offset: const Offset(0, 1),
               ),
@@ -98,12 +99,11 @@ class _ContactPageState extends State<ContactPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Contact Us',
-                style: TextStyle(
-                  fontSize: 18,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 16),
@@ -138,8 +138,11 @@ class _ContactPageState extends State<ContactPage> {
                 child: ElevatedButton(
                   onPressed: isValid ? _handleSubmit : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.lightTheme.colorScheme.primary,
-                    disabledBackgroundColor: const Color(0xFFD1D5DB),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    disabledBackgroundColor: Theme.of(context)
+                        .colorScheme
+                        .outline
+                        .withValues(alpha: 0.6),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -170,10 +173,9 @@ class _ContactPageState extends State<ContactPage> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 14,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
             fontWeight: FontWeight.w500,
-            color: Color(0xFF374151),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
         const SizedBox(height: 8),
@@ -185,19 +187,23 @@ class _ContactPageState extends State<ContactPage> {
           decoration: InputDecoration(
             hintText: hint,
             filled: true,
-            fillColor: Colors.white,
+            fillColor: Theme.of(context).colorScheme.surface,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFFD1D5DB)),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFFD1D5DB)),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
-                color: AppTheme.lightTheme.colorScheme.primary,
+                color: Theme.of(context).colorScheme.primary,
                 width: 2,
               ),
             ),

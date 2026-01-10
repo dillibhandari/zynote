@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:my_secure_note_app/core/theme/app_theme.dart';
 
 // custom_error_widget.dart
 
@@ -12,8 +11,9 @@ class CustomErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -30,20 +30,18 @@ class CustomErrorWidget extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   "Something went wrong",
-                  style: const TextStyle(
-                    fontSize: 24,
+                  style: theme.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFF262626),
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
                 SizedBox(
-                  child: const Text(
+                  child: Text(
                     'We encountered an unexpected error while processing your request.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFF525252), // neutral-600
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -64,8 +62,8 @@ class CustomErrorWidget extends StatelessWidget {
                   ),
                   label: const Text('Back'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.lightTheme.primaryColor,
-                    foregroundColor: Colors.white,
+                    backgroundColor: theme.colorScheme.primary,
+                    foregroundColor: theme.colorScheme.onPrimary,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 10,

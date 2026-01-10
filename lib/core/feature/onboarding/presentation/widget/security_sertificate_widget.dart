@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_secure_note_app/core/common/widgets/custom_icon_widget.dart';
-import 'package:my_secure_note_app/core/theme/app_theme.dart';
 import 'package:sizer/sizer.dart';
 
 class SecurityCertificationWidgetCompact extends StatelessWidget {
@@ -8,7 +7,7 @@ class SecurityCertificationWidgetCompact extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = AppTheme.lightTheme;
+    final theme = Theme.of(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
       margin: EdgeInsets.symmetric(vertical: 2.h),

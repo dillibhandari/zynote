@@ -17,11 +17,11 @@ class NotesShimmerLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return viewType == NotesViewType.grid
-        ? _buildGridShimmer()
-        : _buildListShimmer();
+        ? _buildGridShimmer(context)
+        : _buildListShimmer(context);
   }
 
-  Widget _buildGridShimmer() {
+  Widget _buildGridShimmer(BuildContext context) {
     return GridView.builder(
       padding: EdgeInsets.symmetric(horizontal: 4.w),
       itemCount: itemCount,
@@ -31,29 +31,41 @@ class NotesShimmerLoader extends StatelessWidget {
         mainAxisSpacing: 2.h,
         childAspectRatio: 0.8,
       ),
-      itemBuilder: (_, __) => _shimmerCard(borderRadius: 12),
+      itemBuilder: (_, __) => _shimmerCard(
+        context,
+        borderRadius: 12,
+      ),
     );
   }
 
-  Widget _buildListShimmer() {
+  Widget _buildListShimmer(BuildContext context) {
     return ListView.builder(
       padding: EdgeInsets.symmetric(horizontal: 4.w),
       itemCount: itemCount,
       itemBuilder: (_, __) => Padding(
         padding: EdgeInsets.only(bottom: 1.5.h),
-        child: _shimmerCard(height: 120, borderRadius: 10),
+        child: _shimmerCard(
+          context,
+          height: 120,
+          borderRadius: 10,
+        ),
       ),
     );
   }
 
-  Widget _shimmerCard({double? height, required double borderRadius}) {
+  Widget _shimmerCard(
+    BuildContext context, {
+    double? height,
+    required double borderRadius,
+  }) {
+    final theme = Theme.of(context);
     return Shimmer.fromColors(
-      baseColor: Colors.grey.shade300,
-      highlightColor: Colors.grey.shade100,
+      baseColor: theme.colorScheme.surfaceContainerHighest,
+      highlightColor: theme.colorScheme.surface,
       child: Container(
         height: height,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(borderRadius),
         ),
       ),

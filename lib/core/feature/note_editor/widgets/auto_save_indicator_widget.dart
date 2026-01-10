@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_secure_note_app/core/common/widgets/custom_icon_widget.dart';
-import 'package:my_secure_note_app/core/theme/app_theme.dart';
 import 'package:sizer/sizer.dart';
 
 class AutoSaveIndicatorWidget extends StatelessWidget {
@@ -27,15 +26,15 @@ class AutoSaveIndicatorWidget extends StatelessWidget {
               child: CircularProgressIndicator(
                 strokeWidth: 2,
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  AppTheme.lightTheme.colorScheme.primary,
+                  Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),
             SizedBox(width: 2.w),
             Text(
               'Saving...',
-              style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                color: AppTheme.lightTheme.colorScheme.primary,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -48,8 +47,8 @@ class AutoSaveIndicatorWidget extends StatelessWidget {
             SizedBox(width: 1.w),
             Text(
               'Saved ${_formatTime(lastSaved!)}',
-              style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
           ],

@@ -5,8 +5,6 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   fast_rsa
   file_selector_windows
-  flutter_localization
-  flutter_secure_storage_windows
   local_auth_windows
   url_launcher_windows
 )

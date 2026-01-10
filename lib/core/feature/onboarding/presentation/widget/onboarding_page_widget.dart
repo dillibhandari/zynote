@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_secure_note_app/core/common/widgets/custom_icon_widget.dart';
-import 'package:my_secure_note_app/core/theme/app_theme.dart';
 import 'package:sizer/sizer.dart';
 
 class OnboardingPageWidget extends StatelessWidget {
@@ -39,8 +38,8 @@ class OnboardingPageWidget extends StatelessWidget {
                   onPressed: onSkip,
                   child: Text(
                     'Skip',
-                    style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-                      color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -51,14 +50,14 @@ class OnboardingPageWidget extends StatelessWidget {
               width: 60.w,
               height: 30.h,
               decoration: BoxDecoration(
-                color: AppTheme.lightTheme.colorScheme.primaryContainer,
+                color: Theme.of(context).colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Center(
                 child: CustomIconWidget(
                   iconName: iconName,
                   size: 80,
-                  color: AppTheme.lightTheme.colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),
@@ -67,9 +66,9 @@ class OnboardingPageWidget extends StatelessWidget {
 
             Text(
               title,
-              style: AppTheme.lightTheme.textTheme.headlineMedium?.copyWith(
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: AppTheme.lightTheme.colorScheme.onSurface,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
               textAlign: TextAlign.center,
             ),
@@ -79,8 +78,8 @@ class OnboardingPageWidget extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 4.w),
               child: Text(
                 description,
-                style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
-                  color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   height: 1.5,
                 ),
                 textAlign: TextAlign.center,
@@ -89,7 +88,7 @@ class OnboardingPageWidget extends StatelessWidget {
 
             const Spacer(),
 
-            _buildPageIndicator(),
+            _buildPageIndicator(context),
 
             SizedBox(height: 4.h),
             SizedBox(
@@ -98,7 +97,7 @@ class OnboardingPageWidget extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: onNext,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.lightTheme.colorScheme.primary,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -106,7 +105,7 @@ class OnboardingPageWidget extends StatelessWidget {
                 ),
                 child: Text(
                   isLastPage ? 'Get Started' : 'Next',
-                  style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
                   ),
@@ -121,7 +120,7 @@ class OnboardingPageWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildPageIndicator() {
+  Widget _buildPageIndicator(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
@@ -132,8 +131,8 @@ class OnboardingPageWidget extends StatelessWidget {
           height: 1.h,
           decoration: BoxDecoration(
             color: currentPage == index
-                ? AppTheme.lightTheme.colorScheme.primary
-                : AppTheme.lightTheme.colorScheme.outline,
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.outline,
             borderRadius: BorderRadius.circular(4),
           ),
         ),

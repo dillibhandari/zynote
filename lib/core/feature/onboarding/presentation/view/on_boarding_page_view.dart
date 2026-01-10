@@ -79,8 +79,12 @@ class _OnBoardingPageViewState extends ConsumerState<OnBoardingPageView>
           page = _pageController.page!;
         }
 
+        final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
         final colors = [
-          [const Color(0xFFFFFFFF), const Color(0xFFF9F7F3)],
+          isDark
+              ? [theme.colorScheme.surface, theme.colorScheme.surfaceContainerHighest]
+              : [const Color(0xFFFFFFFF), const Color(0xFFF9F7F3)],
         ];
 
         final currentColorSet = colors[page.round() % colors.length];
@@ -178,7 +182,7 @@ class _AdvancedOnboardingPage extends StatelessWidget {
             data.title,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
           ),
@@ -187,7 +191,10 @@ class _AdvancedOnboardingPage extends StatelessWidget {
             data.description,
             style: Theme.of(
               context,
-            ).textTheme.bodyLarge?.copyWith(color: Colors.black54, height: 1.4),
+            ).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              height: 1.4,
+            ),
             textAlign: TextAlign.center,
           ),
           const Spacer(flex: 3),
@@ -270,7 +277,9 @@ class _AnimatedIcon extends StatelessWidget {
               color: Theme.of(context).colorScheme.primaryContainer,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black12,
+                  color: Theme.of(context).colorScheme.shadow.withValues(
+                    alpha: 0.12,
+                  ),
                   blurRadius: 20,
                   spreadRadius: 2,
                   offset: const Offset(0, 6),
@@ -314,7 +323,10 @@ class _BottomProgressBar extends StatelessWidget {
             child: LinearProgressIndicator(
               minHeight: 6,
               value: progress.clamp(0, 1),
-              backgroundColor: Colors.black12,
+              backgroundColor: Theme.of(context)
+                  .colorScheme
+                  .outline
+                  .withValues(alpha: 0.6),
               valueColor: AlwaysStoppedAnimation(
                 Theme.of(context).colorScheme.primary,
               ),

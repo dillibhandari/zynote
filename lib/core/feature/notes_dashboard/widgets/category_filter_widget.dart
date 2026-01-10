@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
  
-import '../../../theme/app_theme.dart';
 
 class CategoryFilterWidget extends StatelessWidget {
   final String selectedCategory;
@@ -26,8 +25,8 @@ class CategoryFilterWidget extends StatelessWidget {
             children: [
               Text(
                 'Filter by Category:',
-                style: AppTheme.lightTheme.textTheme.labelLarge?.copyWith(
-                  color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
               const Spacer(),
@@ -36,8 +35,8 @@ class CategoryFilterWidget extends StatelessWidget {
                   onTap: () => onCategoryChanged('All Notes'),
                   child: Text(
                     'Clear',
-                    style: AppTheme.lightTheme.textTheme.labelLarge?.copyWith(
-                      color: AppTheme.lightTheme.colorScheme.primary,
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ),
@@ -59,23 +58,23 @@ class CategoryFilterWidget extends StatelessWidget {
                     label: Text(
                       category,
                       style:
-                          AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
+                          Theme.of(context).textTheme.labelMedium?.copyWith(
                         color: isSelected
-                            ? Colors.white
-                            : AppTheme.lightTheme.colorScheme.onSurface,
+                            ? Theme.of(context).colorScheme.onPrimary
+                            : Theme.of(context).colorScheme.onSurface,
                         fontWeight:
                             isSelected ? FontWeight.w600 : FontWeight.w400,
                       ),
                     ),
                     selected: isSelected,
                     onSelected: (_) => onCategoryChanged(category),
-                    backgroundColor: AppTheme.lightTheme.colorScheme.surface,
-                    selectedColor: AppTheme.lightTheme.colorScheme.primary,
-                    checkmarkColor: Colors.white,
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    selectedColor: Theme.of(context).colorScheme.primary,
+                    checkmarkColor: Theme.of(context).colorScheme.onPrimary,
                     side: BorderSide(
                       color: isSelected
-                          ? AppTheme.lightTheme.colorScheme.primary
-                          : AppTheme.lightTheme.colorScheme.outline,
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.outline,
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),

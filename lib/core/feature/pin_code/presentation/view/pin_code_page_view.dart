@@ -8,7 +8,6 @@ import 'package:my_secure_note_app/core/feature/pin_code/presentation/widget/loc
 import 'package:my_secure_note_app/core/feature/pin_code/presentation/widget/numeric_keypad.dart';
 import 'package:my_secure_note_app/core/feature/pin_code/presentation/widget/pin_input_display.dart';
 import 'package:my_secure_note_app/core/feature/pin_code/presentation/widget/security_header.dart';
-import 'package:my_secure_note_app/core/theme/app_theme.dart';
 import 'package:my_secure_note_app/core/router/app_router.dart';
 import 'package:sizer/sizer.dart';
 
@@ -90,8 +89,8 @@ class _PinAuthenticationState extends ConsumerState<PinAuthentication>
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            AppTheme.lightTheme.scaffoldBackgroundColor,
-                            AppTheme.lightTheme.scaffoldBackgroundColor
+                            Theme.of(context).scaffoldBackgroundColor,
+                            Theme.of(context).scaffoldBackgroundColor
                                 .withValues(alpha: 0.8),
                           ],
                         ),
@@ -127,8 +126,7 @@ class _PinAuthenticationState extends ConsumerState<PinAuthentication>
                                     onPressed: null,
                                     style: ElevatedButton.styleFrom(
                                       minimumSize: Size(double.infinity, 6.h),
-                                      backgroundColor: AppTheme
-                                          .lightTheme
+                                      backgroundColor: Theme.of(context)
                                           .colorScheme
                                           .surface,
                                     ),
@@ -152,10 +150,10 @@ class _PinAuthenticationState extends ConsumerState<PinAuthentication>
                             child: Container(
                               padding: EdgeInsets.all(4.w),
                               decoration: BoxDecoration(
-                                color: AppTheme.lightTheme.colorScheme.surface,
+                                color: Theme.of(context).colorScheme.surface,
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: AppTheme.lightTheme.colorScheme.outline
+                                  color: Theme.of(context).colorScheme.outline
                                       .withValues(alpha: 0.3),
                                 ),
                               ),
@@ -163,17 +161,15 @@ class _PinAuthenticationState extends ConsumerState<PinAuthentication>
                                 children: [
                                   CustomIconWidget(
                                     iconName: 'shield',
-                                    color: AppTheme.lightTheme.primaryColor,
+                                    color: Theme.of(context).primaryColorLight,
                                     size: 5.w,
                                   ),
                                   SizedBox(width: 3.w),
                                   Expanded(
                                     child: Text(
                                       'Your notes are protected with military-grade encryption',
-                                      style: AppTheme
-                                          .lightTheme
-                                          .textTheme
-                                          .bodySmall,
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
                                     ),
                                   ),
                                 ],

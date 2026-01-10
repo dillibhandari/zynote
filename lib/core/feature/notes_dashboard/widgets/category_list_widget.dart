@@ -70,6 +70,20 @@ class CategoryChip extends ConsumerWidget {
     final icon = Constants.getCategoryIcon(category);
 
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final selectedBackground =
+        isDark ? theme.colorScheme.onSurface : theme.colorScheme.primary;
+    final selectedForeground =
+        isDark ? theme.colorScheme.surface : theme.colorScheme.onSecondary;
+    final unselectedBackground = isDark
+        ? theme.colorScheme.surfaceContainerHighest
+        : theme.colorScheme.surface;
+    final unselectedBorder = isDark
+        ? theme.colorScheme.outlineVariant
+        : theme.colorScheme.outline;
+    final unselectedForeground = isDark
+        ? theme.colorScheme.onSurfaceVariant
+        : theme.colorScheme.onSurface;
 
     return InkWell(
       borderRadius: BorderRadius.circular(20),
@@ -77,12 +91,10 @@ class CategoryChip extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? theme.colorScheme.primary : Colors.grey.shade100,
+          color: isSelected ? selectedBackground : unselectedBackground,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected
-                ? theme.colorScheme.primary
-                : Colors.grey.shade300,
+            color: isSelected ? selectedBackground : unselectedBorder,
           ),
         ),
         child: Row(
@@ -91,13 +103,17 @@ class CategoryChip extends ConsumerWidget {
             Icon(
               icon,
               size: 18,
-              color: isSelected ? Colors.white : Colors.grey.shade700,
+              color: isSelected
+                  ? selectedForeground
+                  : unselectedForeground,
             ),
             const SizedBox(width: 8),
             Text(
               category,
               style: TextStyle(
-                color: isSelected ? Colors.white : Colors.grey.shade700,
+                color: isSelected
+                    ? selectedForeground
+                    : unselectedForeground,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
