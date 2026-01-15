@@ -35,7 +35,7 @@ class NoteCardWidget extends StatelessWidget {
       child: Slidable(
         key: ValueKey(note['id']),
         startActionPane: ActionPane(
-          motion: const ScrollMotion(),
+          motion: const BehindMotion(),
           children: [
             SlidableAction(
               onPressed: (_) => onEdit(),
@@ -64,7 +64,7 @@ class NoteCardWidget extends StatelessWidget {
           ],
         ),
         endActionPane: ActionPane(
-          motion: const ScrollMotion(),
+          motion: const BehindMotion(),
           children: [
             SlidableAction(
               onPressed: (_) => _showDeleteConfirmation(context),

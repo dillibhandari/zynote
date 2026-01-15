@@ -40,71 +40,106 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/splash',
         name: 'splash',
-        builder: (context, state) => const SplashPageView(),
+        pageBuilder: (context, state) => _buildPageWithFadeTransition(
+          context,
+          state,
+          const SplashPageView(),
+        ),
       ),
       GoRoute(
         path: '/onboarding',
         name: 'onboarding',
-        builder: (context, state) => const OnBoardingPageView(),
+        pageBuilder: (context, state) => _buildPageWithSlideTransition(
+          context,
+          state,
+          const OnBoardingPageView(),
+        ),
       ),
       GoRoute(
         path: '/pin-authentication',
         name: 'pin-authentication',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final isFromOnboarding = state.extra as bool? ?? false;
-          return PinAuthentication(isFromOnboarding: isFromOnboarding);
+          return _buildPageWithSlideTransition(
+            context,
+            state,
+            PinAuthentication(isFromOnboarding: isFromOnboarding),
+          );
         },
       ),
       GoRoute(
         path: '/notes-dashboard',
         name: 'notes-dashboard',
-        builder: (context, state) => const NotesDashboard(),
+        pageBuilder: (context, state) => _buildPageWithFadeTransition(
+          context,
+          state,
+          const NotesDashboard(),
+        ),
         routes: [
           GoRoute(
             path: 'note-editor',
             name: 'note-editor',
-            builder: (context, state) {
+            pageBuilder: (context, state) {
               final note = state.extra as Map<String, dynamic>?;
-              return NoteEditor(existingNote: note);
+              return _buildPageWithSlideTransition(
+                context,
+                state,
+                NoteEditor(existingNote: note),
+              );
             },
           ),
           GoRoute(
             path: 'note-settings',
             name: 'note-settings',
-            builder: (context, state) {
-              return SettingsPage();
-            },
+            pageBuilder: (context, state) =>
+                _buildPageWithSlideTransition(context, state, SettingsPage()),
             routes: [
               GoRoute(
                 path: 'note-theme',
                 name: 'note-theme',
-                builder: (context, state) {
+                pageBuilder: (context, state) {
                   final String title = state.extra as String;
-                  return ThemePage(title: title);
+                  return _buildPageWithSlideTransition(
+                    context,
+                    state,
+                    ThemePage(title: title),
+                  );
                 },
               ),
               GoRoute(
                 path: 'note-change-pin',
                 name: 'note-change-pin',
-                builder: (context, state) {
+                pageBuilder: (context, state) {
                   final String title = state.extra as String;
-                  return ChangePINPage(title: title);
+                  return _buildPageWithSlideTransition(
+                    context,
+                    state,
+                    ChangePINPage(title: title),
+                  );
                 },
               ),
               GoRoute(
                 path: 'note-faq',
                 name: 'note-faq',
-                builder: (context, state) {
+                pageBuilder: (context, state) {
                   final String title = state.extra as String;
-                  return FAQPage(title: title);
+                  return _buildPageWithSlideTransition(
+                    context,
+                    state,
+                    FAQPage(title: title),
+                  );
                 },
               ),
               GoRoute(
                 path: 'note-contact',
                 name: 'note-contact',
-                builder: (context, state) {
+                pageBuilder: (context, state) {
                   final String title = state.extra as String;
-                  return ContactPage(title: title);
+                  return _buildPageWithSlideTransition(
+                    context,
+                    state,
+                    ContactPage(title: title),
+                  );
                 },
               ),
             ],
@@ -143,3 +178,45 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     },
   );
 });
+
+/// Helper function to build page with fade transition
+Page<void> _buildPageWithFadeTransition(
+  BuildContext context,
+  GoRouterState state,
+  Widget child,
+) {
+  return CustomTransitionPage<void>(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(
+        opacity: CurveTween(curve: Curves.easeInOutCubic).animate(animation),
+        child: child,
+      );
+    },
+    transitionDuration: const Duration(milliseconds: 300),
+  );
+}
+
+/// Helper function to build page with slide transition
+Page<void> _buildPageWithSlideTransition(
+  BuildContext context,
+  GoRouterState state,
+  Widget child,
+) {
+  return CustomTransitionPage<void>(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(1.0, 0.0);
+      const end = Offset.zero;
+      final tween = Tween(
+        begin: begin,
+        end: end,
+      ).chain(CurveTween(curve: Curves.easeInOutCubic));
+
+      return SlideTransition(position: animation.drive(tween), child: child);
+    },
+    transitionDuration: const Duration(milliseconds: 300),
+  );
+}

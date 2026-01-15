@@ -119,9 +119,9 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
             insetPadding: EdgeInsets.symmetric(horizontal: 20),
             title: Text(
               'Unsaved Changes',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             content: Text(
               'You have unsaved changes. Do you want to save before leaving?',
@@ -132,9 +132,7 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
                 onPressed: () => Navigator.of(context).pop(true),
                 child: Text(
                   'Discard',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               ),
               TextButton(
@@ -250,10 +248,11 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
               Positioned.fill(
                 child: GestureDetector(
                   onTap: () => setState(() => _showShareOptions = false),
-                  child: Container(
-                    color: Theme.of(context).colorScheme.scrim.withValues(
-                      alpha: 0.5,
-                    ),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.scrim.withValues(alpha: 0.5),
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: ShareOptionsWidget(
@@ -287,11 +286,13 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
       decoration: InputDecoration(
         hintText: 'Note title...',
         filled: isDark ? false : theme.inputDecorationTheme.filled,
-        fillColor:
-            isDark ? Colors.transparent : theme.inputDecorationTheme.fillColor,
+        fillColor: isDark
+            ? Colors.transparent
+            : theme.inputDecorationTheme.fillColor,
         hintStyle: theme.textTheme.headlineSmall?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant
-              .withValues(alpha: isDark ? 0.6 : 0.7),
+          color: theme.colorScheme.onSurfaceVariant.withValues(
+            alpha: isDark ? 0.6 : 0.7,
+          ),
           fontWeight: FontWeight.w400,
           fontSize: 18.sp,
         ),
@@ -308,13 +309,15 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
   PreferredSizeWidget _buildAppBar(NoteEditorState state) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final actionBackground =
-        isDark ? theme.colorScheme.onSurface : theme.colorScheme.primary;
-    final actionForeground =
-        isDark ? theme.colorScheme.surface : theme.colorScheme.onSecondary;
+    final actionBackground = isDark
+        ? theme.colorScheme.onSurface
+        : theme.colorScheme.primary;
+    final actionForeground = isDark
+        ? theme.colorScheme.surface
+        : theme.colorScheme.onSecondary;
     return AppBar(
-      backgroundColor: theme.appBarTheme.backgroundColor ??
-          theme.colorScheme.surface,
+      backgroundColor:
+          theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface,
       elevation: 0,
       leading: GestureDetector(
         onTap: () async {
@@ -324,15 +327,15 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
         },
         child: Container(
           margin: EdgeInsets.all(2.w),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 6, top: 4),
-              child: CustomIconWidget(
-                iconName: 'arrow_back_ios',
-                color: theme.colorScheme.onSurface,
-                size: 22,
-              ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 6, top: 4),
+            child: CustomIconWidget(
+              iconName: 'arrow_back_ios',
+              color: theme.colorScheme.onSurface,
+              size: 22,
             ),
           ),
+        ),
       ),
       titleSpacing: 6,
       title: Column(
@@ -360,7 +363,8 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
             padding: EdgeInsets.only(right: 2.w),
             child: Row(
               children: [
-                Container(
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
                   width: 8,
                   height: 8,
                   decoration: BoxDecoration(
@@ -378,15 +382,25 @@ class _NoteEditorState extends ConsumerState<NoteEditor>
               ],
             ),
           ),
-        GestureDetector(
-          onTap: _saveNote,
-          child: Container(
-            margin: EdgeInsets.only(right: 4.w),
-            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.w),
-            decoration: BoxDecoration(
-              color: actionBackground,
-              borderRadius: BorderRadius.circular(8),
-            ),
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOutCubic,
+          margin: EdgeInsets.only(right: 4.w),
+          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.w),
+          decoration: BoxDecoration(
+            color: actionBackground,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: actionBackground.withValues(alpha: 0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: InkWell(
+            onTap: _saveNote,
+            borderRadius: BorderRadius.circular(8),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

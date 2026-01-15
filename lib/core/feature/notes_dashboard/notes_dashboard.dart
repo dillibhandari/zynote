@@ -285,8 +285,14 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
   Widget _buildGridView(List<NoteModel> notes) {
     return RefreshIndicator(
       onRefresh: _onRefresh,
+      color: Theme.of(context).colorScheme.primary,
+      displacement: 60,
+      strokeWidth: 3,
       child: GridView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 4.w),
+        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 4.w,
@@ -296,7 +302,18 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
         itemCount: notes.length,
         itemBuilder: (context, index) {
           final note = notes[index];
-          return NoteCard(note: note, onTap: () => _onNoteTap(note));
+          return AnimatedScale(
+            scale: 1.0,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOutCubic,
+            child: Hero(
+              tag: 'note-${note.noteId}',
+              child: Material(
+                type: MaterialType.transparency,
+                child: NoteCard(note: note, onTap: () => _onNoteTap(note)),
+              ),
+            ),
+          );
         },
       ),
     );
@@ -305,15 +322,32 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
   Widget _buildListView(List<NoteModel> notes) {
     return RefreshIndicator(
       onRefresh: _onRefresh,
+      color: Theme.of(context).colorScheme.primary,
+      displacement: 60,
+      strokeWidth: 3,
       child: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 4.w),
+        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
         itemCount: notes.length,
         itemBuilder: (context, index) {
           final note = notes[index];
-          return NoteListItem(
-            note: note,
-            onTap: () => _onNoteTap(note),
-            onLongPress: () {},
+          return AnimatedScale(
+            scale: 1.0,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOutCubic,
+            child: Hero(
+              tag: 'note-${note.noteId}',
+              child: Material(
+                type: MaterialType.transparency,
+                child: NoteListItem(
+                  note: note,
+                  onTap: () => _onNoteTap(note),
+                  onLongPress: () {},
+                ),
+              ),
+            ),
           );
         },
       ),
@@ -329,30 +363,35 @@ class _NotesDashboardState extends ConsumerState<NotesDashboard>
     final foregroundColor = isDark
         ? theme.colorScheme.surface
         : theme.colorScheme.onSecondary;
-    return GestureDetector(
-      onTap: _onCreateNote,
-      child: Container(
-        width: 140,
-        height: 50,
-        decoration: BoxDecoration(
-          color: backgroundColor,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOutCubic,
+      width: 140,
+      height: 50,
+      child: Material(
+        color: backgroundColor,
+        elevation: 4,
+        shadowColor: theme.colorScheme.shadow,
+        borderRadius: BorderRadius.circular(50),
+        child: InkWell(
+          onTap: _onCreateNote,
           borderRadius: BorderRadius.circular(50),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.add_rounded, color: foregroundColor),
-              SizedBox(width: 1.h),
-              Text(
-                "New Note ",
-                style: TextStyle(
-                  color: foregroundColor,
-                  fontWeight: FontWeight.w600,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add_rounded, color: foregroundColor),
+                SizedBox(width: 1.h),
+                Text(
+                  "New Note ",
+                  style: TextStyle(
+                    color: foregroundColor,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

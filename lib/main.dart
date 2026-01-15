@@ -48,6 +48,8 @@ class MyApp extends ConsumerWidget {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: themeMode,
+          themeAnimationDuration: const Duration(milliseconds: 300),
+          themeAnimationCurve: Curves.easeInOutCubic,
 
           routerConfig: router,
 
@@ -59,6 +61,8 @@ class MyApp extends ConsumerWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
+
+          scrollBehavior: const _AppScrollBehavior(),
 
           builder: (context, child) {
             return MediaQuery(
@@ -73,5 +77,14 @@ class MyApp extends ConsumerWidget {
         );
       },
     );
+  }
+}
+
+class _AppScrollBehavior extends ScrollBehavior {
+  const _AppScrollBehavior();
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
   }
 }
